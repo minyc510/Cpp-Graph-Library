@@ -4,10 +4,16 @@
 #include "Graph.h"
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <limits> //Simulate infinity
 #include <queue>
 
 Graph::Graph() {}
+
+Graph::Graph(bool directed) { this->directed = directed; weighted = false; }
+
+Graph::Graph(bool directed, bool weighted) { this->directed = directed; this->weighted = weighted; }
+
 Graph::~Graph() {}
 
 bool Graph::addNode(int data, std::string name) {
@@ -30,9 +36,19 @@ bool Graph::addEdge(std::string fromNode, std::string toNode, int weight) {
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
   if (nodeMap.find(toNode) == nodeMap.end()) { return false; }
 
+  //Weighted Check
+  if (!weighted && weight != 1) { return false; }
+
   //Else add neighbor
   nodeMap[fromNode]->addNeighbor(toNode, weight);
   nodeMap[toNode]->getSetRef().insert(fromNode);
+
+  //Directed Check
+  if (!directed) {
+    nodeMap[toNode]->addNeighbor(fromNode, weight);
+    nodeMap[fromNode]->getSetRef().insert(toNode);
+  }
+
   return true;
 }
 
@@ -79,7 +95,24 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
     neighborMapRef.erase(toNode);
   }
 
+  //If undirected, also delete the inverse edge
+  if (!directed) {
+    //Delete JUST ONE key of 'weight' from multiset
+    multiSet = neighborMapRef[fromNode];
+    std::multiset<int>::iterator it2(multiSet.find(weight));
+    if (it2!=multiSet.end()) { multiSet.erase(it2); }
+
+    //If that was the last edge from toNode to fromNode, delete that (key,value) pair from getMapPtr()
+    if (multiSet.empty()) {
+      neighborMapRef.erase(fromNode);
+    }
+  }
+
   return true;
+}
+
+bool Graph::deleteEdge(std::string fromNode, std::string toNode) {
+  return deleteEdge(fromNode, toNode, 1);
 }
 
 //Returns a list of the names of neighbors
@@ -195,8 +228,13 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
   return returnVec;
 }
 
+std::string Graph::getInfo() {
+    std::stringstream ss;
+    ss << "Directed?: " << directed << ", Weighted?: "<< weighted << std::endl;
+    return ss.str();
+}
 
-/* Temporary Function, useful for debugging.
+// Temporary Function, useful for debugging.
 void Graph::printInfo() {
   std::cout << "\n\nGraph Info: " << std::endl;
   //For Every Node
@@ -213,4 +251,3 @@ void Graph::printInfo() {
     std::cout << "\n\n";
   }
 }
-*/
