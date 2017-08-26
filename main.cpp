@@ -16,14 +16,17 @@ string int2String(int i)
 }
 
 int main() {
-  Graph G(true);
+  Graph G(false);
 
   G.addNode("A");
   G.addNode("B");
   G.addNode("C");
+  G.addNode("D");
+
+  G.addEdge("A","B");
+  G.addEdge("A","B");
+  G.addEdge("C","D");
 
   cout << G.getInfo();
-  G.printInfo();
-
 
 }

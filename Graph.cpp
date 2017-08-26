@@ -10,9 +10,7 @@
 
 Graph::Graph() {}
 
-Graph::Graph(bool directed) { this->directed = directed; weighted = false; }
-
-Graph::Graph(bool directed, bool weighted) { this->directed = directed; this->weighted = weighted; }
+Graph::Graph(bool directed) { this->directed = directed; }
 
 Graph::~Graph() {}
 
@@ -36,14 +34,11 @@ bool Graph::addEdge(std::string fromNode, std::string toNode, int weight) {
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
   if (nodeMap.find(toNode) == nodeMap.end()) { return false; }
 
-  //Weighted Check
-  if (!weighted && weight != 1) { return false; }
-
   //Else add neighbor
   nodeMap[fromNode]->addNeighbor(toNode, weight);
   nodeMap[toNode]->getSetRef().insert(fromNode);
 
-  //Directed Check
+  //If the Graph is undirected, also add the "Inverse-Edge"
   if (!directed) {
     nodeMap[toNode]->addNeighbor(fromNode, weight);
     nodeMap[fromNode]->getSetRef().insert(toNode);
@@ -61,7 +56,8 @@ bool Graph::deleteNode(std::string targetNode) {
   //If node does not exist, return false
   if (nodeMap.find(targetNode) == nodeMap.end()) { return false; }
 
-  //For each Node in getSetRef(), remove targetNode from Node's getMapPtr()
+  //For each Node N in getSetRef(), remove targetNode from N's getMapPtr()
+  //getSetRef() will have all Nodes that have an edge to targetNode
   std::set<std::string>& setReference = (nodeMap[targetNode]->getSetRef());
   for (auto iter : setReference) {
     (nodeMap[iter]->getMapPtr())->erase(targetNode);
@@ -95,7 +91,7 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
     neighborMapRef.erase(toNode);
   }
 
-  //If undirected, also delete the inverse edge
+  //If the Graph is undirected, also delete the "Inverse-Edge"
   if (!directed) {
     //Delete JUST ONE key of 'weight' from multiset
     multiSet = neighborMapRef[fromNode];
@@ -228,26 +224,23 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
   return returnVec;
 }
 
-std::string Graph::getInfo() {
-    std::stringstream ss;
-    ss << "Directed?: " << directed << ", Weighted?: "<< weighted << std::endl;
-    return ss.str();
-}
 
 // Temporary Function, useful for debugging.
-void Graph::printInfo() {
-  std::cout << "\n\nGraph Info: " << std::endl;
+std::string Graph::getInfo() {
+  std::stringstream ss;
+  ss << "\n\nGraph Info: " << std::endl;
   //For Every Node
   for (auto iterA : nodeMap) {
-    std::cout << "[" << iterA.first << "] ";
+    ss << "[" << iterA.first << "] ";
     //For Every Neighbor of Node
     for (auto iterB : *(iterA.second->getMapPtr())) {
-      std::cout << "("<< iterB.first << "): ";
+      ss << "("<< iterB.first << "): ";
       //Print Each Edge of Neighbor
       for (auto weight : iterB.second) {
-        std::cout << weight << ", ";
+        ss << weight << ", ";
       }
     }
-    std::cout << "\n\n";
+    ss << "\n\n";
   }
+  return ss.str();
 }

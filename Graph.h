@@ -13,12 +13,10 @@ class Graph {
 private:
   std::unordered_map<std::string, Node*> nodeMap;
   bool directed = true;
-  bool weighted = false;
 
 public:
-  Graph(); //Default: directed, weighted
+  Graph(); //Default: directed
   Graph(bool directed);
-  Graph(bool directed, bool weighted);
 
   ~Graph();
 
@@ -30,7 +28,6 @@ public:
   bool deleteNode(std::string targetNode);
   bool deleteEdge(std::string fromNode, std::string toNode, int weight);
   bool deleteEdge(std::string fromNode, std::string toNode); //Default weight '1'
-
 
   //Neighbor Functions
   std::vector<std::string> neighborNames(std::string name);
@@ -47,9 +44,8 @@ public:
   std::vector<std::pair<std::string, int>> BFS(std::string name);
 
   //About Graph
-  std::string getInfo();
 
-  void printInfo(); //Temporary Function, useful for debugging.
+  std::string getInfo(); //Temporary Function, useful for debugging.
 };
 
 #endif // GRAPH_H
