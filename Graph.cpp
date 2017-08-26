@@ -29,6 +29,20 @@ bool Graph::addNode(std::string name) {
   return addNode(1, name);
 }
 
+//Given a vector of (int, string) pairs, insert each pair as a node
+void Graph::addNodes(std::vector<std::string> nodes) {
+  for (auto node : nodes) {
+    addNode(node);
+  }
+}
+
+//Given a vector of (int, string) pairs, insert each pair as a node
+void Graph::addNodes(std::vector<std::pair<int, std::string>> nodes) {
+  for (auto nodePair : nodes) {
+    addNode(nodePair.first, nodePair.second);
+  }
+}
+
 bool Graph::addEdge(std::string fromNode, std::string toNode, int weight) {
   //If one of the nodes don't exist, return false
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
@@ -183,6 +197,8 @@ std::vector<std::string> Graph::reachableNames(std::string name) {
   }
   return returnVec;
 }
+
+//BFS: Returns vector of Nodes and their distances from targeNode, in order
 std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
@@ -204,6 +220,7 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
   while (!Q.empty()) {
     std::string currNode = Q.front();
     Q.pop();
+    returnVec.push_back(std::make_pair (currNode, dist[currNode]));
     //For all Neighbors N of currNode
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
     for (auto N : neighborsCurr) {
@@ -214,13 +231,6 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
     }
   }
 
-  //Pull reachable Nodes from dist and return them along with the lowest number of nodes between them
-  for (auto iter : dist) {
-    if (iter.second != infinity) {
-      std::pair<std::string, int> tempPair(iter.first, iter.second);
-      returnVec.push_back(tempPair);
-    }
-  }
   return returnVec;
 }
 

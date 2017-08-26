@@ -23,6 +23,8 @@ public:
   //Trivial Functions
   bool addNode(int data, std::string name);
   bool addNode(std::string name); //Default data-value '1'
+  void addNodes(std::vector<std::string> nodes);
+  void addNodes(std::vector<std::pair<int, std::string>> nodes);
   bool addEdge(std::string fromNode, std::string toNode, int weight);
   bool addEdge(std::string fromNode, std::string toNode); //Default weight '1'
   bool deleteNode(std::string targetNode);
@@ -44,7 +46,6 @@ public:
   std::vector<std::pair<std::string, int>> BFS(std::string name);
 
   //About Graph
-
   std::string getInfo(); //Temporary Function, useful for debugging.
 };
 
