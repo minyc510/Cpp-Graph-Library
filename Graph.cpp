@@ -234,6 +234,65 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
   return returnVec;
 }
 
+//Djiktras
+std::vector<std::pair<std::string, int>> Graph::Dijktras(std::string sourceNode) {
+  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
+  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
+  std::unordered_map<std::string, std::string> prev; //Holds the previous node of current node from the source
+  std::vector<std::pair<std::string, int>> returnVec;
+
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnVec; }
+
+  //For all Nodes N, set their distance from source to infinity, all prevs are null
+  for (auto iter : nodeMap) {
+    dist[iter.first] = infinity;
+    prev[iter.first] = ""; //Empty string serves as null
+  }
+  dist[sourceNode] = 0;
+
+  //Min-Heap of Pairs, where .first is the shortest distance from source and .second is the name
+  //C++ will use the first value of pair as the comparison
+  std::priority_queue<std::pair<int, std::string>,
+  std::vector<std::pair<int, std::string>>,
+  std::greater<std::pair<int, std::string>> > minHeap;
+
+  for (auto iter : nodeMap) {
+    minHeap.push(std::make_pair(dist[iter.first], iter.first));
+  }
+
+  //while pQ not empty
+  while (!minHeap.empty()) {
+    std::string currNode = minHeap.top().second;
+    minHeap.pop();
+
+    //for all neighbors N of currNode
+    std::vector<std::string> neighborsCurr = neighborNames(currNode);
+    for (std::string N : neighborsCurr) {
+      std::unordered_map<std::string, std::multiset<int>>* mapPtr = nodeMap[currNode]->getMapPtr();
+      //*((*mapPtr())[N]).begin()
+      int distanceToN = dist[currNode] + *((*mapPtr)[N]).begin();
+      //if dist[N] > dist[curr] + length(curr,N)
+      if (dist[N] > distanceToN) {
+        //dist [N] = dist[curr] + length(curr,N)
+        dist[N] = distanceToN;
+        //prev[N] = [curr]
+        prev[N] = currNode;
+      }
+    }
+  }
+
+  for (auto iter : dist) {
+    returnVec.push_back(std::make_pair (iter.first, iter.second));
+  }
+
+  return returnVec;
+
+
+
+
+
+
+}
 
 // Temporary Function, useful for debugging.
 std::string Graph::getInfo() {

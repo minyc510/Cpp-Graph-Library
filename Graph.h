@@ -7,6 +7,7 @@
 #include "Node.h"
 #include <vector>
 #include <utility>
+#include <tuple>
 
 class Graph {
 
@@ -44,6 +45,9 @@ public:
 
   //Breadth First Search: Vector of pairs: <reachableNode, distance>
   std::vector<std::pair<std::string, int>> BFS(std::string name);
+
+  //Djiktras
+  std::vector<std::pair<std::string, int>> Dijktras(std::string name);
 
   //About Graph
   std::string getInfo(); //Temporary Function, useful for debugging.
