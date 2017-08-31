@@ -32,4 +32,4 @@ std::unordered_map<std::string, std::multiset<int>>* Node::getMapPtr() {
   return neighborMap;
 }
 
-std::set<std::string>& Node::getSetRef() { return neighborOfSet; }
+std::unordered_set<std::string>& Node::getSetRef() { return neighborOfSet; }

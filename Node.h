@@ -6,6 +6,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <set>
 
 class Node {
@@ -17,7 +18,7 @@ private:
   //neighborMap: List of Nodes that this node has an edge to
   std::unordered_map<std::string, std::multiset<int>>* neighborMap;
   //neighborSet: List of Nodes that have an edge to this Node
-  std::set<std::string> neighborOfSet;
+  std::unordered_set<std::string> neighborOfSet;
 
 
 public:
@@ -28,6 +29,6 @@ public:
 
   //Access
   std::unordered_map<std::string, std::multiset<int>>* getMapPtr();
-  std::set<std::string>& getSetRef();
+  std::unordered_set<std::string>& getSetRef();
 };
 #endif // NODE_H

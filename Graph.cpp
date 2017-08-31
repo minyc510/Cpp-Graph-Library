@@ -72,7 +72,7 @@ bool Graph::deleteNode(std::string targetNode) {
 
   //For each Node N in getSetRef(), remove targetNode from N's getMapPtr()
   //getSetRef() will have all Nodes that have an edge to targetNode
-  std::set<std::string>& setReference = (nodeMap[targetNode]->getSetRef());
+  std::unordered_set<std::string>& setReference = (nodeMap[targetNode]->getSetRef());
   for (auto iter : setReference) {
     (nodeMap[iter]->getMapPtr())->erase(targetNode);
   }
