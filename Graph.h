@@ -44,10 +44,14 @@ public:
   std::vector<std::string> reachableNames(std::string name); //Returns a list of Nodes that are reachable from the target
 
   //Breadth First Search: Vector of pairs: <reachableNode, distance>
-  std::vector<std::pair<std::string, int>> BFS(std::string name);
+  std::vector<std::pair<std::string, int>> BFS(std::string sourceNode);
+
+  //DFS
+  std::vector<std::string> DFS(std::string sourceNode, std::string targetNode);
+  void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
 
   //Djiktras
-  std::vector<std::pair<std::string, int>> Dijktras(std::string name);
+  std::vector<std::pair<std::string, int>> Dijktras(std::string sourceNode);
 
   //About Graph
   std::string getInfo(); //Temporary Function, useful for debugging.

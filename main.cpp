@@ -33,15 +33,10 @@ int main() {
   G.addEdge("I", "G");
   G.addEdge("I", "J");
 
-  //Print results of BFS
-  cout << "BFS on G:" << endl;
-  for (auto x : G.BFS("A")) {
-    cout << x.first << " " << x.second << endl;
-  }
+  vector<string> vec = G.DFS("A", "J");
 
-  cout << "Dijktras on G:" << endl;
-  for (auto x : G.Dijktras("A")) {
-    cout << x.first << " " << x.second << endl;
+  for (auto v : vec) {
+    cout << v << endl;
   }
 
 }

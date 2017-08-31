@@ -199,13 +199,13 @@ std::vector<std::string> Graph::reachableNames(std::string name) {
 }
 
 //BFS: Returns vector of Nodes and their distances from targeNode, in order
-std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
+std::vector<std::pair<std::string, int>> Graph::BFS(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
+  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
   std::vector<std::pair<std::string, int>> returnVec;
 
-  //If targetNode does not exist, return an empty vector
-  if (nodeMap.find(targetNode) == nodeMap.end()) { return returnVec; }
+  //If sourceNode does not exist, return an empty vector
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnVec; }
 
   //For all Nodes N, set dist[N] to infinity
   for (auto iter : nodeMap) {
@@ -213,9 +213,9 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
   }
 
   //BFS
-  dist[targetNode] = 0;
+  dist[sourceNode] = 0;
   std::queue<std::string> Q;
-  Q.push(targetNode);
+  Q.push(sourceNode);
 
   while (!Q.empty()) {
     std::string currNode = Q.front();
@@ -233,6 +233,48 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string targetNode) {
 
   return returnVec;
 }
+
+//DFS - Returns the path from sourceNode to targetNode
+std::vector<std::string> Graph::DFS(std::string sourceNode, std::string targetNode) {
+  std::vector<std::string> pathVec;
+  std::unordered_map<std::string, std::string> prevMap; //Contains the previous Node of any node, also can be used as visited
+  prevMap.emplace(sourceNode, "");
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return pathVec; }
+  if (nodeMap.find(targetNode) == nodeMap.end()) { return pathVec; }
+
+  DFShelper(sourceNode, targetNode, prevMap);
+
+  if (prevMap.find(targetNode) == prevMap.end()) { return pathVec; }
+
+  std::string curr = targetNode;
+  pathVec.push_back(curr);
+  while (true) {
+    curr = prevMap[curr];
+    if (curr == "") { break; }
+    pathVec.push_back(curr);
+  }
+
+  //reverse pathVec so its from source to target
+  std::reverse(pathVec.begin(), pathVec.end());
+
+  return pathVec;
+
+
+}
+
+//DFS
+void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap) {
+  if (currentNode == targetNode) { return; }
+
+  std::vector<std::string> neighbors = neighborNames(currentNode);
+  for (std::string neighbor : neighbors) {
+    if (prevMap.find(neighbor) == prevMap.end()) {
+      prevMap.emplace(neighbor, currentNode);
+      DFShelper(neighbor, targetNode, prevMap);
+    }
+  }
+}
+
 
 //Djiktras
 std::vector<std::pair<std::string, int>> Graph::Dijktras(std::string sourceNode) {
