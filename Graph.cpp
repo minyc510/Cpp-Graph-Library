@@ -327,15 +327,14 @@ void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unor
   }
 }
 
-
 //Djiktras
-std::vector<std::pair<std::string, int>> Graph::Dijktras(std::string sourceNode) {
+std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
   std::unordered_map<std::string, std::string> prev; //Holds the previous node of current node from the source
-  std::vector<std::pair<std::string, int>> returnVec;
+  std::unordered_map<std::string, int> returnMap; //Holds the distance to all nodes reachable from sourceNode
 
-  if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnVec; }
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnMap; }
 
   //For all Nodes N, set their distance from source to infinity, all prevs are null
   for (auto iter : nodeMap) {
@@ -376,16 +375,10 @@ std::vector<std::pair<std::string, int>> Graph::Dijktras(std::string sourceNode)
   }
 
   for (auto iter : dist) {
-    returnVec.push_back(std::make_pair (iter.first, iter.second));
+    if (iter.second != infinity)
+      returnMap.emplace(iter.first, iter.second);
   }
-
-  return returnVec;
-
-
-
-
-
-
+  return returnMap;
 }
 
 // Temporary Function, useful for debugging.

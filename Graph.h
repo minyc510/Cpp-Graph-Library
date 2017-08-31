@@ -51,8 +51,8 @@ public:
   std::vector<std::string> DFS(std::string sourceNode, std::string targetNode);
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
 
-  //Djiktras
-  std::vector<std::pair<std::string, int>> Dijktras(std::string sourceNode);
+  //Djiktras: Returns a map where keys are nodes reachable from source and values are the shortest distance from source
+  std::unordered_map<std::string, int> Dijktras(std::string sourceNode);
 
   //About Graph
   std::string getInfo(); //Temporary Function, useful for debugging.

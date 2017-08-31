@@ -23,19 +23,14 @@ int main() {
   vector<string> nodes = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
   G.addNodes(nodes);
 
-  G.addEdge("A", "B");
-  G.addEdge("A", "C");
-  G.addEdge("A", "D");
-  G.addEdge("E", "B");
-  G.addEdge("E", "F");
-  G.addEdge("F", "G");
-  G.addEdge("H", "G");
-  G.addEdge("I", "G");
-  G.addEdge("I", "J");
-  G.addNode("QWE");
+  G.addEdge("A", "B", 18);
+  G.addEdge("A", "C", 2);
+  G.addEdge("C", "D", 3);
+  G.addEdge("D", "E", 4);
+  G.addEdge("B", "E", 1);
 
-  for (auto x : G.reachableNames("A")) {
-    cout << x << endl;
+  for (auto x : G.Dijktras("A")) {
+    cout << x.first << " " << x.second << endl;
 
   }
 
