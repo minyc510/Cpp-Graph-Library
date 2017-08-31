@@ -198,7 +198,7 @@ std::vector<std::string> Graph::reachableNames(std::string name) {
   return returnVec;
 }
 
-//BFS: Returns vector of Nodes and their distances from targeNode, in order
+//BFS: Returns vector of Nodes and their distances from targetNode, in order
 std::vector<std::pair<std::string, int>> Graph::BFS(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
@@ -232,6 +232,42 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string sourceNode) {
   }
 
   return returnVec;
+}
+
+//BFS2
+std::vector<std::string> Graph::BFS2(std::string sourceNode, std::string targetNode) {
+  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
+  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
+  std::vector<std::string> pathVec;
+
+  //If sourceNode does not exist, return an empty vector
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return pathVec; }
+
+  //For all Nodes N, set dist[N] to infinity
+  for (auto iter : nodeMap) {
+    dist.emplace(iter.first, infinity);
+  }
+
+  //BFS
+  dist[sourceNode] = 0;
+  std::queue<std::string> Q;
+  Q.push(sourceNode);
+
+  while (!Q.empty()) {
+    std::string currNode = Q.front();
+    Q.pop();
+    pathVec.push_back(currNode);
+    //For all Neighbors N of currNode
+    std::vector<std::string> neighborsCurr = neighborNames(currNode);
+    for (auto N : neighborsCurr) {
+      if (dist[N] == infinity) {
+        Q.push(N);
+        dist[N] = dist[currNode] + 1;
+      }
+    }
+  }
+
+  return pathVec;
 }
 
 //DFS - Returns the path from sourceNode to targetNode
