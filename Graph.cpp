@@ -189,17 +189,18 @@ void Graph::exploreHelper(std::set<std::string> &visited, std::string v) {
   }
 }
 
-std::vector<std::string> Graph::reachableNames(std::string name) {
+//reachableNames: Returns a list of Nodes reachable from a given sourceNode
+std::vector<std::string> Graph::reachableNames(std::string sourceNode) {
   std::vector<std::string> returnVec;
-  std::set<std::string> reachable = explore(name);
+  std::set<std::string> reachable = explore(sourceNode);
   for (std::string name : reachable) {
     returnVec.push_back(name);
   }
   return returnVec;
 }
 
-//BFS: Returns vector of Nodes and their distances from targetNode, in order
-std::vector<std::pair<std::string, int>> Graph::BFS(std::string sourceNode) {
+//reachableDists: Returns a list of Nodes and their distances from a given sourceNode (uses BFS)
+std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
   std::vector<std::pair<std::string, int>> returnVec;
@@ -234,38 +235,48 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string sourceNode) {
   return returnVec;
 }
 
-//BFS2
-std::vector<std::string> Graph::BFS2(std::string sourceNode, std::string targetNode) {
-  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
+//BFS
+std::vector<std::string> Graph::BFS(std::string sourceNode, std::string targetNode) {
+  //If either Node DNE, return an empty vector
   std::vector<std::string> pathVec;
-
-  //If sourceNode does not exist, return an empty vector
   if (nodeMap.find(sourceNode) == nodeMap.end()) { return pathVec; }
+  if (nodeMap.find(targetNode) == nodeMap.end()) { return pathVec; }
 
-  //For all Nodes N, set dist[N] to infinity
-  for (auto iter : nodeMap) {
-    dist.emplace(iter.first, infinity);
-  }
+  //prevMap[X] will contain the Node previous to X. Also keeps track of which Nodes have been visited.
+  std::unordered_map<std::string, std::string> prevMap;
+  prevMap.emplace(sourceNode, "");
 
   //BFS
-  dist[sourceNode] = 0;
   std::queue<std::string> Q;
   Q.push(sourceNode);
 
   while (!Q.empty()) {
     std::string currNode = Q.front();
     Q.pop();
-    pathVec.push_back(currNode);
     //For all Neighbors N of currNode
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
-    for (auto N : neighborsCurr) {
-      if (dist[N] == infinity) {
+    for (std::string N : neighborsCurr) {
+      if (prevMap.find(N) == prevMap.end()) {
         Q.push(N);
-        dist[N] = dist[currNode] + 1;
+        prevMap.emplace(N, currNode);
       }
     }
   }
+
+  //If the targetNode was not found return an empty vector
+  if (prevMap.find(targetNode) == prevMap.end()) { return pathVec; }
+
+  //Use prevMap to get the path from Target back to Source
+  std::string curr = targetNode;
+  pathVec.push_back(curr);
+  while (true) {
+    curr = prevMap[curr];
+    if (curr == "") { break; }
+    pathVec.push_back(curr);
+  }
+
+  //Reverse pathVec so the Node's are in order from Source to Target
+  std::reverse(pathVec.begin(), pathVec.end());
 
   return pathVec;
 }

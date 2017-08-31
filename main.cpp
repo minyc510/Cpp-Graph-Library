@@ -34,16 +34,9 @@ int main() {
   G.addEdge("I", "J");
   G.addNode("QWE");
 
-  vector<string> vec = G.DFS("A", "J");
+  for (auto x : G.reachableNames("A")) {
+    cout << x << endl;
 
-  for (auto v : vec) {
-    cout << v << endl;
-  }
-
-  vector<string> vec1 = G.DFS("A", "QWE");
-  cout << "QWE" << endl;
-  for (auto v : vec1) {
-    cout << v << endl;
   }
 
 }

@@ -41,14 +41,13 @@ public:
   //Explore: What Nodes are reachable from targetNode?
   std::set<std::string> explore(std::string name);
   void exploreHelper(std::set<std::string> &visited, std::string name);
-  std::vector<std::string> reachableNames(std::string name); //Returns a list of Nodes that are reachable from the target
+  std::vector<std::string> reachableNames(std::string sourceNode); //Returns a list of Nodes that are reachable from the target
+  std::vector<std::pair<std::string, int>> reachableDists(std::string sourceNode);
 
-  //Breadth First Search: Vector of pairs: <reachableNode, distance>
-  std::vector<std::pair<std::string, int>> BFS(std::string sourceNode);
+  //BFS: Returns the list of nodes between sourceNode and targetNode.
+  std::vector<std::string> BFS(std::string sourceNode, std::string targetNode);
 
-  std::vector<std::string> BFS2(std::string sourceNode, std::string targetNode);
-
-  //DFS: Returns the list of nodes between sourceNode and targetNode. Or empty vector.
+  //DFS: Returns the list of nodes between sourceNode and targetNode.
   std::vector<std::string> DFS(std::string sourceNode, std::string targetNode);
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
 
