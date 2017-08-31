@@ -362,13 +362,9 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
     for (std::string N : neighborsCurr) {
       std::unordered_map<std::string, std::multiset<int>>* mapPtr = nodeMap[currNode]->getMapPtr();
-      //*((*mapPtr())[N]).begin()
       int distanceToN = dist[currNode] + *((*mapPtr)[N]).begin();
-      //if dist[N] > dist[curr] + length(curr,N)
       if (dist[N] > distanceToN) {
-        //dist [N] = dist[curr] + length(curr,N)
         dist[N] = distanceToN;
-        //prev[N] = [curr]
         prev[N] = currNode;
       }
     }
@@ -379,6 +375,63 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
       returnMap.emplace(iter.first, iter.second);
   }
   return returnMap;
+}
+
+std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string targetNode) {
+  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
+  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
+  std::unordered_map<std::string, std::string> prevMap; //Holds the previous node of current node from the source
+  std::vector<std::string> pathVec;
+
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return pathVec; }
+
+  //For all Nodes N, set their distance from source to infinity, all prevs are null
+  for (auto iter : nodeMap) {
+    dist[iter.first] = infinity;
+    prevMap[iter.first] = ""; //Empty string serves as null
+  }
+  dist[sourceNode] = 0;
+
+  //Min-Heap of Pairs, where .first is the shortest distance from source and .second is the name
+  //C++ will use the first value of pair as the comparison
+  std::priority_queue<std::pair<int, std::string>,
+  std::vector<std::pair<int, std::string>>,
+  std::greater<std::pair<int, std::string>> > minHeap;
+
+  for (auto iter : nodeMap) {
+    minHeap.push(std::make_pair(dist[iter.first], iter.first));
+  }
+
+  //while pQ not empty
+  while (!minHeap.empty()) {
+    std::string currNode = minHeap.top().second;
+    minHeap.pop();
+
+    //for all neighbors N of currNode
+    std::vector<std::string> neighborsCurr = neighborNames(currNode);
+    for (std::string N : neighborsCurr) {
+      std::unordered_map<std::string, std::multiset<int>>* mapPtr = nodeMap[currNode]->getMapPtr();
+      int distanceToN = dist[currNode] + *((*mapPtr)[N]).begin();
+      if (dist[N] > distanceToN) {
+        dist[N] = distanceToN;
+        prevMap[N] = currNode;
+      }
+    }
+  }
+
+  //Use prevMap to get the path from Target back to Source
+  std::string curr = targetNode;
+  pathVec.push_back(curr);
+  while (true) {
+    curr = prevMap[curr];
+    if (curr == "") { break; }
+    pathVec.push_back(curr);
+  }
+
+  //Reverse pathVec so the Node's are in order from Source to Target
+  std::reverse(pathVec.begin(), pathVec.end());
+
+  return pathVec;
 }
 
 // Temporary Function, useful for debugging.

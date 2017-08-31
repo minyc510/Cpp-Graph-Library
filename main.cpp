@@ -29,8 +29,8 @@ int main() {
   G.addEdge("D", "E", 4);
   G.addEdge("B", "E", 1);
 
-  for (auto x : G.Dijktras("A")) {
-    cout << x.first << " " << x.second << endl;
+  for (auto x : G.Dijktras("A","B")) {
+    cout << x << " ";
 
   }
 
