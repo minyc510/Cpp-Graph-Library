@@ -20,7 +20,7 @@ int main() {
   //Undirected Graph Object
   Graph G(false);
 
-  vector<string> nodes = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+  vector<string> nodes = {"A", "B", "C", "D", "E"};
   G.addNodes(nodes);
 
   G.addEdge("A", "B", 18);
@@ -29,9 +29,6 @@ int main() {
   G.addEdge("D", "E", 4);
   G.addEdge("B", "E", 1);
 
-  for (auto x : G.Dijktras("A","B")) {
-    cout << x << " ";
-
-  }
+  cout << "G connected?" << G.connected();
 
 }

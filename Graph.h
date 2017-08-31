@@ -44,6 +44,9 @@ public:
   std::vector<std::string> reachableNames(std::string sourceNode); //Returns a list of Nodes that are reachable from the target
   std::vector<std::pair<std::string, int>> reachableDists(std::string sourceNode);
 
+  //Graph Properties
+  bool connected(); //Is the Graph connected? Works only for undirected graphs
+
   //BFS: Returns the shortest path from source to target
   std::vector<std::string> BFS(std::string sourceNode, std::string targetNode);
 
@@ -51,10 +54,16 @@ public:
   std::vector<std::string> DFS(std::string sourceNode, std::string targetNode);
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
 
-  //Djiktras: Returns a map where keys are nodes reachable from source and values are the shortest distance from source
-  std::unordered_map<std::string, int> Dijktras(std::string sourceNode);
   //Djiktras: Returns the shortest path from source to target
   std::vector<std::string> Dijktras(std::string sourceNode, std::string targetNode);
+
+  //Djiktras: Returns a map where keys are nodes reachable from source and values are the shortest distance from source
+  std::unordered_map<std::string, int> Dijktras(std::string sourceNode);
+
+
+
+  //MINIMUM SPANNING TREE ALGORITHMS
+  //Graph PrimsMST();
 
   //About Graph
   std::string getInfo(); //Temporary Function, useful for debugging.

@@ -235,6 +235,16 @@ std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourc
   return returnVec;
 }
 
+//connected: Is the Graph connected?
+bool Graph::connected() {
+  if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
+  //Run explore on a random Node
+  auto it =  nodeMap.begin();
+  std::set<std::string> tempSet = explore(it->first);
+  //Is the set of Nodes reachable == # of all Nodes in the Graph?
+  return (tempSet.size() == nodeMap.size());
+}
+
 //BFS
 std::vector<std::string> Graph::BFS(std::string sourceNode, std::string targetNode) {
   //If either Node DNE, return an empty vector
@@ -433,6 +443,13 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
 
   return pathVec;
 }
+/*
+Graph Graph::PrimsMST() {
+  //Choose a random Node
+
+
+}
+*/
 
 // Temporary Function, useful for debugging.
 std::string Graph::getInfo() {
