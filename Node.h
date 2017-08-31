@@ -20,7 +20,6 @@ private:
   //neighborSet: List of Nodes that have an edge to this Node
   std::unordered_set<std::string> neighborOfSet;
 
-
 public:
   Node(int data, std::string name);
   ~Node();
