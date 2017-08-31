@@ -32,10 +32,17 @@ int main() {
   G.addEdge("H", "G");
   G.addEdge("I", "G");
   G.addEdge("I", "J");
+  G.addNode("QWE");
 
   vector<string> vec = G.DFS("A", "J");
 
   for (auto v : vec) {
+    cout << v << endl;
+  }
+
+  vector<string> vec1 = G.DFS("A", "QWE");
+  cout << "QWE" << endl;
+  for (auto v : vec1) {
     cout << v << endl;
   }
 

@@ -236,16 +236,22 @@ std::vector<std::pair<std::string, int>> Graph::BFS(std::string sourceNode) {
 
 //DFS - Returns the path from sourceNode to targetNode
 std::vector<std::string> Graph::DFS(std::string sourceNode, std::string targetNode) {
+  //If either Node DNE, return an empty vector
   std::vector<std::string> pathVec;
-  std::unordered_map<std::string, std::string> prevMap; //Contains the previous Node of any node, also can be used as visited
-  prevMap.emplace(sourceNode, "");
   if (nodeMap.find(sourceNode) == nodeMap.end()) { return pathVec; }
   if (nodeMap.find(targetNode) == nodeMap.end()) { return pathVec; }
 
+  //prevMap[X] will contain the Node previous to X. Also keeps track of which Nodes have been visited.
+  std::unordered_map<std::string, std::string> prevMap;
+  prevMap.emplace(sourceNode, "");
+
+  //Recursive Kick-Off
   DFShelper(sourceNode, targetNode, prevMap);
 
+  //If the targetNode was not found return an empty vector
   if (prevMap.find(targetNode) == prevMap.end()) { return pathVec; }
 
+  //Use prevMap to get the path from Target back to Source
   std::string curr = targetNode;
   pathVec.push_back(curr);
   while (true) {
@@ -254,20 +260,19 @@ std::vector<std::string> Graph::DFS(std::string sourceNode, std::string targetNo
     pathVec.push_back(curr);
   }
 
-  //reverse pathVec so its from source to target
+  //Reverse pathVec so the Node's are in order from Source to Target
   std::reverse(pathVec.begin(), pathVec.end());
 
   return pathVec;
-
-
 }
 
-//DFS
+//DFS - Recursive Function, modifies prevMap
 void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap) {
   if (currentNode == targetNode) { return; }
 
   std::vector<std::string> neighbors = neighborNames(currentNode);
   for (std::string neighbor : neighbors) {
+    //If this neighbor has not been visited, add it to the prevMap and recurse on it
     if (prevMap.find(neighbor) == prevMap.end()) {
       prevMap.emplace(neighbor, currentNode);
       DFShelper(neighbor, targetNode, prevMap);

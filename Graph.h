@@ -46,7 +46,7 @@ public:
   //Breadth First Search: Vector of pairs: <reachableNode, distance>
   std::vector<std::pair<std::string, int>> BFS(std::string sourceNode);
 
-  //DFS
+  //DFS: Returns the list of nodes between sourceNode and targetNode. Or empty vector.
   std::vector<std::string> DFS(std::string sourceNode, std::string targetNode);
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
 
