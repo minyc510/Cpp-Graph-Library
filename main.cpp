@@ -29,6 +29,6 @@ int main() {
   G.addEdge("D", "E", 4);
   G.addEdge("B", "E", 1);
 
-  cout << "G connected?" << G.connected();
+  cout << "G connected?" << G.connected() << endl;
 
 }
