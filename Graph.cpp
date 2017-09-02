@@ -442,13 +442,6 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
 
   return pathVec;
 }
-/*
-Graph Graph::PrimsMST() {
-  //Choose a random Node
-
-
-}
-*/
 
 // Temporary Function, useful for debugging.
 std::string Graph::getInfo() {

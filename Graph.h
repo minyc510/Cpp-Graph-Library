@@ -60,11 +60,6 @@ public:
   //Djiktras: Returns a map where keys are nodes reachable from source and values are the shortest distance from source
   std::unordered_map<std::string, int> Dijktras(std::string sourceNode);
 
-
-
-  //MINIMUM SPANNING TREE ALGORITHMS
-  //Graph PrimsMST();
-
   //About Graph
   std::string getInfo(); //Temporary Function, useful for debugging.
 };
