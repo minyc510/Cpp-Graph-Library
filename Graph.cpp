@@ -136,6 +136,27 @@ std::vector<std::string> Graph::neighborNames(std::string name) {
   return returnVec;
 }
 
+//GET EDGES
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() {
+  std::vector< std::tuple<std::string, std::string, int> > edgeVec;
+
+  //For all Nodes K in nodeMap:
+  for (auto iter : nodeMap) {
+    auto K = iter.second; //K is a Node*
+    //For all neighbors N of K
+    for (auto iter1 : *(K->getMapPtr())) {
+      auto tempSet = iter1.second; //tempSet is an unordered_set
+      //For all weights from K to N, add it to the edgeVec
+      for (int i : tempSet) {
+        std::tuple<std::string, std::string, int> tempTuple(iter.first, iter1.first, i);
+        edgeVec.push_back(tempTuple);
+      }
+    }
+  }
+
+  return edgeVec;
+}
+
 //NEIGHBORDISTMIN:  Returns a list of the names of neighbors along with the lowest edge weight to each neighbor
 std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string name) {
   std::vector<std::pair<std::string, int>> returnVec;
@@ -336,56 +357,7 @@ void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unor
   }
 }
 
-//Djiktras
-std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
-  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
-  std::unordered_map<std::string, std::string> prev; //Holds the previous node of current node from the source
-  std::unordered_map<std::string, int> returnMap; //Holds the distance to all nodes reachable from sourceNode
-
-  if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnMap; }
-
-  //For all Nodes N, set their distance from source to infinity, all prevs are null
-  for (auto iter : nodeMap) {
-    dist[iter.first] = infinity;
-    prev[iter.first] = ""; //Empty string serves as null
-  }
-  dist[sourceNode] = 0;
-
-  //Min-Heap of Pairs, where .first is the shortest distance from source and .second is the name
-  //C++ will use the first value of pair as the comparison
-  std::priority_queue<std::pair<int, std::string>,
-  std::vector<std::pair<int, std::string>>,
-  std::greater<std::pair<int, std::string>> > minHeap;
-
-  for (auto iter : nodeMap) {
-    minHeap.push(std::make_pair(dist[iter.first], iter.first));
-  }
-
-  //while pQ not empty
-  while (!minHeap.empty()) {
-    std::string currNode = minHeap.top().second;
-    minHeap.pop();
-
-    //for all neighbors N of currNode
-    std::vector<std::string> neighborsCurr = neighborNames(currNode);
-    for (std::string N : neighborsCurr) {
-      std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
-      int distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
-      if (dist[N] > distanceToN) {
-        dist[N] = distanceToN;
-        prev[N] = currNode;
-      }
-    }
-  }
-
-  for (auto iter : dist) {
-    if (iter.second != infinity)
-      returnMap.emplace(iter.first, iter.second);
-  }
-  return returnMap;
-}
-
+//Dijktras
 std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string targetNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
@@ -442,6 +414,57 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
 
   return pathVec;
 }
+
+//Djiktras
+std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
+  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
+  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
+  std::unordered_map<std::string, std::string> prev; //Holds the previous node of current node from the source
+  std::unordered_map<std::string, int> returnMap; //Holds the distance to all nodes reachable from sourceNode
+
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnMap; }
+
+  //For all Nodes N, set their distance from source to infinity, all prevs are null
+  for (auto iter : nodeMap) {
+    dist[iter.first] = infinity;
+    prev[iter.first] = ""; //Empty string serves as null
+  }
+  dist[sourceNode] = 0;
+
+  //Min-Heap of Pairs, where .first is the shortest distance from source and .second is the name
+  //C++ will use the first value of pair as the comparison
+  std::priority_queue<std::pair<int, std::string>,
+  std::vector<std::pair<int, std::string>>,
+  std::greater<std::pair<int, std::string>> > minHeap;
+
+  for (auto iter : nodeMap) {
+    minHeap.push(std::make_pair(dist[iter.first], iter.first));
+  }
+
+  //while pQ not empty
+  while (!minHeap.empty()) {
+    std::string currNode = minHeap.top().second;
+    minHeap.pop();
+
+    //for all neighbors N of currNode
+    std::vector<std::string> neighborsCurr = neighborNames(currNode);
+    for (std::string N : neighborsCurr) {
+      std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
+      int distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
+      if (dist[N] > distanceToN) {
+        dist[N] = distanceToN;
+        prev[N] = currNode;
+      }
+    }
+  }
+
+  for (auto iter : dist) {
+    if (iter.second != infinity)
+      returnMap.emplace(iter.first, iter.second);
+  }
+  return returnMap;
+}
+
 
 // Temporary Function, useful for debugging.
 std::string Graph::getInfo() {

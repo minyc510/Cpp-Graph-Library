@@ -32,11 +32,16 @@ public:
   bool deleteEdge(std::string fromNode, std::string toNode, int weight);
   bool deleteEdge(std::string fromNode, std::string toNode); //Default weight '1'
 
+  //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
+  //If the graph is undirected then edges will be repeated (nodeA,nodeB,w) and (nodeB,nodeA,w)
+  std::vector< std::tuple<std::string, std::string, int> > getEdges();
+
   //Neighbor Functions
   std::vector<std::string> neighborNames(std::string name);
   std::vector<std::pair<std::string, int>> neighborDistMin(std::string name);
   std::vector<std::pair<std::string, int>> neighborDistMax(std::string name);
   bool deleteNeighbors(std::string name);
+
 
   //Explore: What Nodes are reachable from targetNode?
   std::set<std::string> explore(std::string name);

@@ -24,7 +24,7 @@ int main() {
   G.addEdge("I", "G");
   G.addEdge("I", "J");
 
-  for (auto x : G.BFS("A","J")) {
-    cout << x << endl;
+  for (auto x : G.getEdges()) {
+    cout << get<0>(x) << get<1>(x) << get<2>(x) << endl;
   }
 }
