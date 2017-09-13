@@ -93,11 +93,11 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
   //If one of the nodes don't exist or no such edge exists, return false
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
   if (nodeMap.find(toNode) == nodeMap.end()) { return false; }
-  std::unordered_map<std::string, std::unordered_set<int>>& neighborMapRef = *(nodeMap[fromNode]->getMapPtr());
+  std::unordered_map<std::string, std::unordered_multiset<int>>& neighborMapRef = *(nodeMap[fromNode]->getMapPtr());
   if (neighborMapRef.find(toNode) == neighborMapRef.end()) { return false; }
 
-  //Delete weight from unordered_set
-  std::unordered_set<int>& set = neighborMapRef[toNode];
+  //Delete weight from unordered_multiset
+  std::unordered_multiset<int>& set = neighborMapRef[toNode];
   set.erase(weight);
 
   //If that was the last edge from fromNode to toNode, delete that (key,value) pair from getMapPtr()
@@ -107,10 +107,10 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
 
   //If the Graph is undirected, also delete the "Inverse-Edge"
   if (!directed) {
-	  std::unordered_map<std::string, std::unordered_set<int>>& neighborMapRef1 = *(nodeMap[toNode]->getMapPtr());
+	  std::unordered_map<std::string, std::unordered_multiset<int>>& neighborMapRef1 = *(nodeMap[toNode]->getMapPtr());
 
-	  //Delete weight from unordered_set
-	  std::unordered_set<int>& set1 = neighborMapRef1[fromNode];
+	  //Delete weight from unordered_multiset
+	  std::unordered_multiset<int>& set1 = neighborMapRef1[fromNode];
 	  set1.erase(weight);
 
 	  //If that was the last edge from fromNode to toNode, delete that (key,value) pair from getMapPtr()
@@ -128,7 +128,7 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode) {
 std::vector<std::string> Graph::neighborNames(std::string name) {
   std::vector<std::string> returnVec;
 
-  std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     returnVec.push_back(it.first);
   }
@@ -145,7 +145,7 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() {
     auto K = iter.second; //K is a Node*
     //For all neighbors N of K
     for (auto iter1 : *(K->getMapPtr())) {
-      auto tempSet = iter1.second; //tempSet is an unordered_set
+      auto tempSet = iter1.second; //tempSet is an unordered_multiset
       //For all weights from K to N, add it to the edgeVec
       for (int i : tempSet) {
         std::tuple<std::string, std::string, int> tempTuple(iter.first, iter1.first, i);
@@ -161,7 +161,7 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() {
 std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string name) {
   std::vector<std::pair<std::string, int>> returnVec;
 
-  std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     std::pair<std::string, int> tempPair(it.first, *std::min_element(it.second.begin(),it.second.end()));
     returnVec.push_back(tempPair);
@@ -174,7 +174,7 @@ std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string name
 std::vector<std::pair<std::string, int>> Graph::neighborDistMax(std::string name) {
   std::vector<std::pair<std::string, int>> returnVec;
 
-  std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     std::pair<std::string, int> tempPair(it.first, *std::max_element(it.second.begin(),it.second.end()));
     returnVec.push_back(tempPair);
@@ -391,7 +391,7 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
     //for all neighbors N of currNode
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
     for (std::string N : neighborsCurr) {
-      std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
+      std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
       int distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
       if (dist[N] > distanceToN) {
         dist[N] = distanceToN;
@@ -449,7 +449,7 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
     //for all neighbors N of currNode
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
     for (std::string N : neighborsCurr) {
-      std::unordered_map<std::string, std::unordered_set<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
+      std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
       int distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
       if (dist[N] > distanceToN) {
         dist[N] = distanceToN;
