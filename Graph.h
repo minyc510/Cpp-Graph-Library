@@ -32,6 +32,9 @@ public:
   bool deleteEdge(std::string fromNode, std::string toNode, int weight);
   bool deleteEdge(std::string fromNode, std::string toNode); //Default weight '1'
 
+  //About Graph
+  bool connected(); //Is the Graph connected? Works only for undirected graphs
+
   //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
   //If the graph is undirected then edges will be repeated (nodeA,nodeB,w) and (nodeB,nodeA,w)
   std::vector< std::tuple<std::string, std::string, int> > getEdges();
@@ -42,15 +45,12 @@ public:
   std::vector<std::pair<std::string, int>> neighborDistMax(std::string name);
   bool deleteNeighbors(std::string name);
 
-
   //Explore: What Nodes are reachable from targetNode?
   std::set<std::string> explore(std::string name);
   void exploreHelper(std::set<std::string> &visited, std::string name);
   std::vector<std::string> reachableNames(std::string sourceNode); //Returns a list of Nodes that are reachable from the target
   std::vector<std::pair<std::string, int>> reachableDists(std::string sourceNode);
-
-  //Graph Properties
-  bool connected(); //Is the Graph connected? Works only for undirected graphs
+  bool pathCheck(std::string fromNode, std::string toNode);
 
   //BFS: Returns the shortest path from source to target
   std::vector<std::string> BFS(std::string sourceNode, std::string targetNode);

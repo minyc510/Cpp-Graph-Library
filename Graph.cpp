@@ -124,16 +124,26 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode) {
   return deleteEdge(fromNode, toNode, 1);
 }
 
-//NEIGHBORNAMES: Returns a list of the names of neighbors
-std::vector<std::string> Graph::neighborNames(std::string name) {
-  std::vector<std::string> returnVec;
 
-  std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
-  for (auto it : *neighborMapPtr) {
-    returnVec.push_back(it.first);
+//CONNECTED: Is the graph connected? This is only valid for UNDIRECTED Graphs.
+bool Graph::connected() {
+  if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
+
+  //If the graph is undirected, the algorithm is simple.
+  if (!directed) {
+    //Run explore on a random Node
+    auto it =  nodeMap.begin();
+    std::set<std::string> tempSet = explore(it->first);
+    //Is the set of Nodes reachable == # of all Nodes in the Graph?
+    return (tempSet.size() == nodeMap.size());
   }
 
-  return returnVec;
+  //If the graph is directed, it's more complicated
+  else {
+
+
+
+  }
 }
 
 //GET EDGES
@@ -155,6 +165,19 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() {
   }
 
   return edgeVec;
+}
+
+
+//NEIGHBORNAMES: Returns a list of the names of neighbors
+std::vector<std::string> Graph::neighborNames(std::string name) {
+  std::vector<std::string> returnVec;
+
+  std::unordered_map<std::string, std::unordered_multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  for (auto it : *neighborMapPtr) {
+    returnVec.push_back(it.first);
+  }
+
+  return returnVec;
 }
 
 //NEIGHBORDISTMIN:  Returns a list of the names of neighbors along with the lowest edge weight to each neighbor
@@ -255,14 +278,10 @@ std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourc
   return returnVec;
 }
 
-//connected: Is the Graph connected?
-bool Graph::connected() {
-  if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
-  //Run explore on a random Node
-  auto it =  nodeMap.begin();
-  std::set<std::string> tempSet = explore(it->first);
-  //Is the set of Nodes reachable == # of all Nodes in the Graph?
-  return (tempSet.size() == nodeMap.size());
+//PATHCHECK: Returns true if there is a (directed) path from fromNode to toNode.
+bool Graph::pathCheck(std::string fromNode, std::string toNode) {
+  std::set<std::string> reachable = explore(fromNode);
+  return (reachable.find(toNode) != reachable.end());
 }
 
 //BFS
