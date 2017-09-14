@@ -12,6 +12,32 @@ Graph::Graph() {}
 
 Graph::Graph(bool directed) { this->directed = directed; }
 
+//COPY-CONSTRUCTOR
+Graph::Graph(const Graph& original) {
+
+  //Copy over boolean's
+  directed = original.directed;
+
+  //Add all nodes in original to new Graph
+  for (auto iter : original.nodeMap) {
+    int data = iter.second->getData();
+    std::string name = iter.first;
+
+    Node* newNode = new Node(data, name);
+    nodeMap.emplace(name, newNode);
+  }
+
+  //Add all edges in original to new Graph
+  std::vector< std::tuple<std::string, std::string, int> > edgeVec = original.getEdges();
+  for (auto edge : edgeVec) {
+    std::string nodeA = std::get<0>(edge);
+    std::string nodeB = std::get<1>(edge);
+    int weight = std::get<2>(edge);
+    this->addEdge(nodeA,nodeB,weight);
+  }
+
+}
+
 Graph::~Graph() {}
 
 bool Graph::addNode(int data, std::string name) {
@@ -125,29 +151,29 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode) {
 }
 
 
-//CONNECTED: Is the graph connected? This is only valid for UNDIRECTED Graphs.
+//CONNECTED: Is the graph connected? By definition, this is for UNDIRECTED Graphs.
 bool Graph::connected() {
   if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
 
-  //If the graph is undirected, the algorithm is simple.
-  if (!directed) {
-    //Run explore on a random Node
-    auto it =  nodeMap.begin();
-    std::set<std::string> tempSet = explore(it->first);
-    //Is the set of Nodes reachable == # of all Nodes in the Graph?
-    return (tempSet.size() == nodeMap.size());
-  }
+  //Run explore on a random Node
+  auto it =  nodeMap.begin();
+  std::set<std::string> tempSet = explore(it->first);
+  //Is the set of Nodes reachable == # of all Nodes in the Graph?
+  return (tempSet.size() == nodeMap.size());
 
-  //If the graph is directed, it's more complicated
-  else {
+}
 
+//WEAKLYCONNECTED: Is the graph weakly connected? By definition, this is for DIRECTED Graphs.
+//A directed graph is called weakly connected if replacing all of its
+//directed edges with undirected edges produces a connected (undirected) graph.
+bool Graph::weaklyConnected() {
+  if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
 
-
-  }
+  return false;
 }
 
 //GET EDGES
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() {
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const {
   std::vector< std::tuple<std::string, std::string, int> > edgeVec;
 
   //For all Nodes K in nodeMap:

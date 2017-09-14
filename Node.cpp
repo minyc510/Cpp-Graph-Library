@@ -28,6 +28,10 @@ void Node::addNeighbor(std::string neighborName, int weight) {
   (*neighborMap)[neighborName].insert(weight);
 }
 
+int Node::getData() {
+  return data;
+}
+
 std::unordered_map<std::string, std::unordered_multiset<int>>* Node::getMapPtr() {
   return neighborMap;
 }

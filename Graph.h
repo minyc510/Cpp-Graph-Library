@@ -19,6 +19,11 @@ public:
   Graph(); //Default: directed
   Graph(bool directed);
 
+  //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
+  std::vector< std::tuple<std::string, std::string, int> > getEdges() const;
+
+  Graph(const Graph& other); //Copy-Constructor
+
   ~Graph();
 
   //Trivial Functions
@@ -33,11 +38,10 @@ public:
   bool deleteEdge(std::string fromNode, std::string toNode); //Default weight '1'
 
   //About Graph
-  bool connected(); //Is the Graph connected? Works only for undirected graphs
+  bool connected(); //Is the Graph connected? Logically only for undirected graphs
+  bool weaklyConnected(); //Is the Graph weakly connected? Logically only for directed graphs
 
-  //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
-  //If the graph is undirected then edges will be repeated (nodeA,nodeB,w) and (nodeB,nodeA,w)
-  std::vector< std::tuple<std::string, std::string, int> > getEdges();
+
 
   //Neighbor Functions
   std::vector<std::string> neighborNames(std::string name);

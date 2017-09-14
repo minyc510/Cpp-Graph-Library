@@ -27,6 +27,7 @@ public:
   void addNeighbor(std::string neighborName, int weight);
 
   //Access
+  int getData();
   std::unordered_map<std::string, std::unordered_multiset<int>>* getMapPtr();
   std::unordered_set<std::string>& getSetRef();
 };

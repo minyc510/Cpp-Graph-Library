@@ -27,4 +27,9 @@ int main() {
 
   cout << "done" << endl;
 
+  Graph F = G;
+
+  for (auto e : F.getEdges()) {
+    cout << get<0>(e) << " " << get<1>(e) << " " << get<2>(e) << endl;
+  }
 }
