@@ -33,9 +33,9 @@ Graph::Graph(const Graph& original) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
     int weight = std::get<2>(edge);
+
     this->addEdge(nodeA,nodeB,weight);
   }
-
 }
 
 Graph::~Graph() {}
@@ -169,7 +169,17 @@ bool Graph::connected() {
 bool Graph::weaklyConnected() {
   if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
 
-  return false;
+  //Create a copy, replace all directed edges with undirected edges (ie for all edges A,B,w add B,A,w)
+  Graph temp(*this);
+  std::vector< std::tuple<std::string, std::string, int> > edgeVec = temp.getEdges();
+  for (auto edge : edgeVec) {
+    std::string nodeA = std::get<0>(edge);
+    std::string nodeB = std::get<1>(edge);
+    int weight = std::get<2>(edge);
+    temp.addEdge(nodeB, nodeA, weight);
+  }
+
+  return temp.connected();
 }
 
 //GET EDGES

@@ -22,7 +22,7 @@ public:
   //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
   std::vector< std::tuple<std::string, std::string, int> > getEdges() const;
 
-  Graph(const Graph& other); //Copy-Constructor
+  Graph(const Graph& other); //Copy-Constructor, uses getEdges function
 
   ~Graph();
 

@@ -27,9 +27,27 @@ int main() {
 
   cout << "done" << endl;
 
-  Graph F = G;
+  Graph F(G);
 
   for (auto e : F.getEdges()) {
     cout << get<0>(e) << " " << get<1>(e) << " " << get<2>(e) << endl;
   }
+
+  cout << "Connectedness testing:" << endl;
+  Graph H(true); //Directed Graph
+
+
+  H.addNode("A");
+  H.addNode("B");
+  H.addNode("C");
+  H.addNode("D");
+
+  H.addEdge("A","B");
+  H.addEdge("B","C");
+  H.addEdge("C","D");
+
+  cout << H.weaklyConnected() << endl;
+
+
+
 }
