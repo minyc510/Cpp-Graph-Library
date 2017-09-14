@@ -9,44 +9,28 @@ using namespace std;
 
 int main() {
   //Undirected Graph Object
-  Graph G(false);
+  Graph G(true);
 
-  vector<string> nodes = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+  vector<string> nodes = {"A", "B", "C", "D"};
   G.addNodes(nodes);
 
   G.addEdge("A", "B");
-  G.addEdge("A", "B");
-  G.addEdge("A", "B");
-  G.addEdge("A", "B");
-  G.addEdge("B", "C");
+  G.addEdge("A", "C");
   G.addEdge("A", "D");
 
-  for (auto e : G.getEdges()) {
-    cout << get<0>(e) << " " << get<1>(e) << " " << get<2>(e) << endl;
+  for (auto neighborName : G.neighborNames("A")) {
+   cout << neighborName << " ";
   }
 
-  cout << "done" << endl;
+  cout << endl;
 
-  Graph F(G);
-
-  for (auto e : F.getEdges()) {
-    cout << get<0>(e) << " " << get<1>(e) << " " << get<2>(e) << endl;
+  Graph F = G.transpose();
+  for (auto neighborName : F.neighborNames("A")) {
+    cout << neighborName << " ";
   }
 
-  cout << "Connectedness testing:" << endl;
-  Graph H(true); //Directed Graph
 
 
-  H.addNode("A");
-  H.addNode("B");
-  H.addNode("C");
-  H.addNode("D");
-
-  H.addEdge("A","B");
-  H.addEdge("B","C");
-  H.addEdge("C","D");
-
-  cout << H.weaklyConnected() << endl;
 
 
 

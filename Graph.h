@@ -37,10 +37,15 @@ public:
   bool deleteEdge(std::string fromNode, std::string toNode, int weight);
   bool deleteEdge(std::string fromNode, std::string toNode); //Default weight '1'
 
-  //About Graph
-  bool connected(); //Is the Graph connected? Logically only for undirected graphs
-  bool weaklyConnected(); //Is the Graph weakly connected? Logically only for directed graphs
+  //Undirected Graph Specific Functions
+  bool connected(); //Is the Graph connected?
 
+  //Directed Graph Specific Functions
+  bool weaklyConnected(); //Is the Graph weakly connected?
+  bool stronglyConnected(); //UNFINISHED
+
+  //transpose: Creates a copy, reverses edges of that copy and returns it.
+  Graph transpose();
 
 
   //Neighbor Functions

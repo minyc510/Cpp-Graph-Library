@@ -163,30 +163,64 @@ bool Graph::connected() {
 
 }
 
-//WEAKLYCONNECTED: Is the graph weakly connected? By definition, this is for DIRECTED Graphs.
+//weaklyConnected(): Is the graph weakly connected?
 //A directed graph is called weakly connected if replacing all of its
 //directed edges with undirected edges produces a connected (undirected) graph.
 bool Graph::weaklyConnected() {
   if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
 
-  //Create a copy, replace all directed edges with undirected edges (ie for all edges A,B,w add B,A,w)
-  Graph temp(*this);
-  std::vector< std::tuple<std::string, std::string, int> > edgeVec = temp.getEdges();
+  //Create a copy of this graph
+  Graph modifiedCopy(*this);
+  //Replace all directed edges with undirected edges (ie for all edges <A,B,w> add <B,A,w>)
+  std::vector< std::tuple<std::string, std::string, int> > edgeVec = modifiedCopy.getEdges();
   for (auto edge : edgeVec) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
     int weight = std::get<2>(edge);
-    temp.addEdge(nodeB, nodeA, weight);
+    modifiedCopy.addEdge(nodeB, nodeA, weight);
   }
 
-  return temp.connected();
+  //Test if the modified copy is connected
+  return modifiedCopy.connected();
+}
+
+//stronglyConnected: Is the graph strongly connected?
+//A directed graph is called strongly connected if
+//there is a path in each direction between each pair of vertices of the graph.
+bool stronglyConnected() {
+  //UNFINISHED
+  return false;
+}
+
+//transpose: reverse the edges
+Graph Graph::transpose() {
+  //Create a new Graph object.
+  Graph graph(directed);
+
+  //Add all existing nodes to the new Graph
+  for (auto iter : nodeMap) {
+    int data = iter.second->getData();
+    graph.addNode(data, iter.first);
+  }
+
+  //For all edges A,B,w in the original, add B,A,w to the copy
+  std::vector< std::tuple<std::string, std::string, int> > edgeVec = this->getEdges();
+  for (auto edge : edgeVec) {
+    std::string nodeA = std::get<0>(edge);
+    std::string nodeB = std::get<1>(edge);
+    int weight = std::get<2>(edge);
+
+    graph.addEdge(nodeB, nodeA, weight);
+  }
+
+  return graph;
 }
 
 //GET EDGES
 std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const {
   std::vector< std::tuple<std::string, std::string, int> > edgeVec;
 
-  //For all Nodes K in nodeMap:
+  //For all Nodes K in nodeMap
   for (auto iter : nodeMap) {
     auto K = iter.second; //K is a Node*
     //For all neighbors N of K
