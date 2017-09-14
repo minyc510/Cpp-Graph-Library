@@ -15,8 +15,16 @@ int main() {
   G.addNodes(nodes);
 
   G.addEdge("A", "B");
+  G.addEdge("A", "B");
+  G.addEdge("A", "B");
+  G.addEdge("A", "B");
   G.addEdge("B", "C");
-  cout << G.pathCheck("A", "B") << endl;
-  cout << G.pathCheck("C", "A") << endl;
-  cout << G.pathCheck("B", "J") << endl;
+  G.addEdge("A", "D");
+
+  for (auto e : G.getEdges()) {
+    cout << get<0>(e) << " " << get<1>(e) << " " << get<2>(e) << endl;
+  }
+
+  cout << "done" << endl;
+
 }

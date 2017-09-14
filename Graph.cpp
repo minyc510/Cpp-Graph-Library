@@ -158,11 +158,33 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() {
       auto tempSet = iter1.second; //tempSet is an unordered_multiset
       //For all weights from K to N, add it to the edgeVec
       for (int i : tempSet) {
-        std::tuple<std::string, std::string, int> tempTuple(iter.first, iter1.first, i);
+        std::string nodeA = iter.first;
+        std::string nodeB = iter1.first;
+        std::tuple<std::string, std::string, int> tempTuple(nodeA, nodeB, i);
         edgeVec.push_back(tempTuple);
+
       }
     }
   }
+
+  //If the Graph is Undirected, post-process to delete duplicates ie (nodeA,nodeB,w) and (nodeB, nodeA,w)
+  if (!directed) {
+    //For every (A,B,w) in edgeVec, delete one (B,A,w)
+    std::vector< std::tuple<std::string, std::string, int> > deleteTheseEdges;
+    for (auto edge : edgeVec) {
+      std::string nodeA = std::get<0>(edge);
+      std::string nodeB = std::get<1>(edge);
+      int weight = std::get<2>(edge);
+      std::tuple<std::string, std::string, int> deleteMe(nodeB, nodeA, weight);
+      if (nodeA > nodeB) //Prevents deleting both duplicates, we just want to delete one to leave a unique edge.
+        deleteTheseEdges.push_back(deleteMe);
+    }
+
+    for (auto edge : deleteTheseEdges) {
+      edgeVec.erase(std::remove(edgeVec.begin(), edgeVec.end(), edge), edgeVec.end());
+    }
+  }
+
 
   return edgeVec;
 }
