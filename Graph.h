@@ -16,7 +16,7 @@ private:
   bool directed = true;
 
 public:
-  Graph(); //Default: directed
+  Graph(); //Graphs are directed by default
   Graph(bool directed);
 
   //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
@@ -41,12 +41,11 @@ public:
   bool connected(); //Is the Graph connected?
 
   //Directed Graph Specific Functions
-  bool weaklyConnected(); //Is the Graph weakly connected?
-  bool stronglyConnected(); //UNFINISHED
+  bool weaklyConnected() const; //Is the Graph weakly connected?
+  bool stronglyConnected() const; //UNFINISHED
 
-  //transpose: Creates a copy, reverses edges of that copy and returns it.
-  Graph transpose();
-
+  //Modification Functions
+  Graph transpose() const; //Creates a copy, reverses edges of that copy and returns it.
 
   //Neighbor Functions
   std::vector<std::string> neighborNames(std::string name);
@@ -54,25 +53,19 @@ public:
   std::vector<std::pair<std::string, int>> neighborDistMax(std::string name);
   bool deleteNeighbors(std::string name);
 
-  //Explore: What Nodes are reachable from targetNode?
-  std::set<std::string> explore(std::string name);
+  //Explore Functions
+  std::set<std::string> explore(std::string sourceNode); //Returns a set of Nodes reachable from the source Node
   void exploreHelper(std::set<std::string> &visited, std::string name);
   std::vector<std::string> reachableNames(std::string sourceNode); //Returns a list of Nodes that are reachable from the target
-  std::vector<std::pair<std::string, int>> reachableDists(std::string sourceNode);
+  std::vector<std::pair<std::string, int>> reachableDists(std::string sourceNode); //Includes distances
   bool pathCheck(std::string fromNode, std::string toNode);
 
-  //BFS: Returns the shortest path from source to target
-  std::vector<std::string> BFS(std::string sourceNode, std::string targetNode);
-
-  //DFS: Returns the shortest path from source to target
-  std::vector<std::string> DFS(std::string sourceNode, std::string targetNode);
+  //Core Graph Functions
+  std::vector<std::string> BFS(std::string sourceNode, std::string targetNode); //Returns the shortest path from source to target
+  std::vector<std::string> DFS(std::string sourceNode, std::string targetNode); //Returns the shortest path from source to target
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
-
-  //Djiktras: Returns the shortest path from source to target
-  std::vector<std::string> Dijktras(std::string sourceNode, std::string targetNode);
-
-  //Djiktras: Returns a map where keys are nodes reachable from source and values are the shortest distance from source
-  std::unordered_map<std::string, int> Dijktras(std::string sourceNode);
+  std::vector<std::string> Dijktras(std::string sourceNode, std::string targetNode); //Returns the shortest path from source to target
+  std::unordered_map<std::string, int> Dijktras(std::string sourceNode); //Returns a map where keys are nodes reachable from source and values are the shortest distance from source
 
   //About Graph
   std::string getInfo(); //Temporary Function, useful for debugging.

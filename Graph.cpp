@@ -55,14 +55,14 @@ bool Graph::addNode(std::string name) {
   return addNode(1, name);
 }
 
-//Given a vector of (int, string) pairs, insert each pair as a node
+//Given a vector of strings, insert each string as a Node
 void Graph::addNodes(std::vector<std::string> nodes) {
   for (auto node : nodes) {
     addNode(node);
   }
 }
 
-//Given a vector of (int, string) pairs, insert each pair as a node
+//Given a vector of (int, string) pairs, insert each pair as a Node
 void Graph::addNodes(std::vector<std::pair<int, std::string>> nodes) {
   for (auto nodePair : nodes) {
     addNode(nodePair.first, nodePair.second);
@@ -166,7 +166,7 @@ bool Graph::connected() {
 //weaklyConnected(): Is the graph weakly connected?
 //A directed graph is called weakly connected if replacing all of its
 //directed edges with undirected edges produces a connected (undirected) graph.
-bool Graph::weaklyConnected() {
+bool Graph::weaklyConnected() const {
   if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
 
   //Create a copy of this graph
@@ -187,13 +187,13 @@ bool Graph::weaklyConnected() {
 //stronglyConnected: Is the graph strongly connected?
 //A directed graph is called strongly connected if
 //there is a path in each direction between each pair of vertices of the graph.
-bool stronglyConnected() {
+bool Graph::stronglyConnected() const {
   //UNFINISHED
   return false;
 }
 
 //transpose: reverse the edges
-Graph Graph::transpose() {
+Graph Graph::transpose() const {
   //Create a new Graph object.
   Graph graph(directed);
 
