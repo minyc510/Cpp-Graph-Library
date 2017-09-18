@@ -187,9 +187,16 @@ bool Graph::weaklyConnected() const {
 //stronglyConnected: Is the graph strongly connected?
 //A directed graph is called strongly connected if
 //there is a path in each direction between each pair of vertices of the graph.
-bool Graph::stronglyConnected() const {
-  //UNFINISHED
-  return false;
+bool Graph::stronglyConnected() {
+  //DFS on arbitraryNode. If arbitraryNode can't reach all other Nodes, return false.
+  std::string arbitraryNode = nodeMap.begin()->first;
+  std::set<std::string> tempSet = explore(arbitraryNode);
+  if (tempSet.size() != nodeMap.size()) { return false; }
+  //DFS on same arbitraryNode on the transpose of the Graph. If it can reach all other Nodes, the Graph is stronglyConnected.
+  Graph T = transpose();
+  std::set<std::string> tempSet1 = T.explore(arbitraryNode);
+  std::cout << "***" << tempSet1.size() << std::endl;
+  return (tempSet1.size() == nodeMap.size());
 }
 
 //transpose: reverse the edges

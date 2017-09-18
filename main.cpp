@@ -8,34 +8,45 @@
 using namespace std;
 
 int main() {
-  //Undirected Graph Object
-  Graph G(true);
+
   vector<string> nodes = {"A", "B", "C", "D"};
 
-  cout << "Adding Nodes: ";
-  for (string node : nodes) { cout << node << " "; }
-  cout << endl;
+  //Directed Graph Object
+  Graph G(true);
+  cout << "Directed Graph 'G' created." << endl;
   G.addNodes(nodes);
-
-  cout << "Adding Edges." << endl;
+  cout << "Nodes added: ";
+  for (string node : nodes) { cout << node << " "; }
   G.addEdge("A", "B");
   G.addEdge("A", "C");
   G.addEdge("A", "D");
+  cout << "\nEdges added. ";
 
-  cout << "Neighbors of 'A' in G: " << endl;
+  cout << "\nNeighbors of 'A' in G: " << endl;
   for (auto neighborName : G.neighborNames("A")) {
    cout << neighborName << " ";
   }
   cout << endl;
 
-  cout << "Transposing Graph G into Graph F..." << endl;
   Graph F = G.transpose();
-  cout << "Neighbors of 'A' in F:" << endl;
+  cout << "Neighbors of 'A' in transpose of G:" << endl;
   for (auto neighborName : F.neighborNames("A")) {
     cout << neighborName << " ";
   }
   cout << endl;
 
+  cout << "Creating Directed Graph H." << endl;
+  Graph H(true);
+  H.addNodes(nodes);
+  H.addEdge("A","B");
+  H.addEdge("B","C");
+  H.addEdge("B","D");
+
+  cout << "H:";
+  cout << H.getInfo();
+
+  cout << "H weakly connected?: " << H.weaklyConnected() << endl;
+  cout << "H strongly connected?: " << H.stronglyConnected() << endl;
 
 
   cout << "------------------------------------" << endl;

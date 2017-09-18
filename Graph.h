@@ -42,7 +42,7 @@ public:
 
   //Directed Graph Specific Functions
   bool weaklyConnected() const; //Is the Graph weakly connected?
-  bool stronglyConnected() const; //UNFINISHED
+  bool stronglyConnected(); //UNFINISHED
 
   //Modification Functions
   Graph transpose() const; //Creates a copy, reverses edges of that copy and returns it.
