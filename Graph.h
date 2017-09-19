@@ -74,6 +74,8 @@ public:
   //About Graph
   std::string getInfo(); //Returns a list of all Nodes along with their Edges.
   int getNumNodes(); //Returns the number of Nodes
+  int getNumEdges();
+  bool nodeInGraph(std::string node); //Is the Node in the Graph?
 
 };
 

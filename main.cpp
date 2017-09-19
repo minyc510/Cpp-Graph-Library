@@ -57,6 +57,27 @@ int main() {
   }
   cout << endl;
 
+  vector<string> nodes1 = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
+  Graph I(false);
+  I.addNodes(nodes1);
+  I.addEdge("A","B",1);
+  I.addEdge("B","D",2);
+  I.addEdge("D","C",8);
+  I.addEdge("D","E",50);
+  I.addEdge("D","F",5);
+  I.addEdge("D","I",1);
+  I.addEdge("G","I",2);
+  I.addEdge("G","E",3);
+  I.addEdge("C","H",7);
+  I.addEdge("H","F",100);
+  cout << "Prims.." << endl;
+  Graph MST = I.Prims();
+
+  cout << I.getInfo();
+  cout << I.connected() << "??";
+  cout << MST.getInfo();
+
+
   cout << "------------------------------------" << endl;
   cout << "Done." << endl;
   cout << "------------------------------------" << endl;

@@ -266,7 +266,7 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const
   return edgeVec;
 }
 
-//GET EDGES
+//GET EDGES SORTED
 std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesSorted() const {
   std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
 
@@ -594,24 +594,31 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
 }
 
 Graph Graph::Prims() {
-/*
+
   //Initialize a tree with a single vertex, chosen arbitrarily from the graph.
   Graph MST;
+  if (!connected()) { return MST; } //If the Graph is not connected, return an empty tree.
   std::string arbitraryNode = nodeMap.begin()->first;
   MST.addNode(arbitraryNode);
-  if (!connected()) { return MST; } //If the Graph is not connected, return an empty tree.
 
   //Repeatedly add the lightest edge until all Nodes are in the tree.
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesSorted();
 
-
-  while (MST.getNumNodes() < getNumNodes()) {
-    //Find the lightest edge to a Node not in the tree
-
-
+  while (MST.getNumEdges() != (getNumNodes()-1)) {
+    for (auto edge : edges) {
+      //If one Node is in the tree and the other is not
+      if ( (MST.nodeInGraph(std::get<0>(edge)) && !MST.nodeInGraph(std::get<1>(edge))) ||
+           (!MST.nodeInGraph(std::get<0>(edge)) && MST.nodeInGraph(std::get<1>(edge))) )
+      {
+        //add Nodes and Edge to MST
+        MST.addNode(std::get<0>(edge));
+        MST.addNode(std::get<1>(edge));
+        MST.addEdge(std::get<0>(edge), std::get<1>(edge), std::get<2>(edge));
+        break;
+      }
+    }
   }
-
-*/
+  return MST;
 }
 
 //Returns a list of all Nodes along with their Edges.
@@ -636,4 +643,11 @@ std::string Graph::getInfo() {
 
 int Graph::getNumNodes() {
   return nodeMap.size();
+}
+
+int Graph::getNumEdges() {
+  return getEdges().size();
+}
+bool Graph::nodeInGraph(std::string name) {
+  return (nodeMap.find(name) != nodeMap.end());
 }
