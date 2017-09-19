@@ -266,13 +266,24 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const
   return edgeVec;
 }
 
-//GET EDGES SORTED
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesSorted() const {
+//Returns a sorted list of edges from low to high weights
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesAscending() const {
   std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
 
   std::sort(edges.begin(),edges.end(),
        [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
        { return std::get<2>(a) < std::get<2>(b); });
+
+  return edges;
+}
+
+//Returns a sorted list of edges from high to low weights
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesDescending() const {
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+
+  std::sort(edges.begin(),edges.end(),
+       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
+       { return std::get<2>(a) > std::get<2>(b); });
 
   return edges;
 }
@@ -602,9 +613,9 @@ Graph Graph::Prims() {
   MST.addNode(arbitraryNode);
 
   //Repeatedly add the lightest edge until all Nodes are in the tree.
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesSorted();
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesAscending();
 
-  while (MST.getNumEdges() != (getNumNodes()-1)) {
+  while (MST.getNumEdges() != (getNumNodes()-1)) { //There are |N-1| Edges in a MST
     for (auto edge : edges) {
       //If one Node is in the tree and the other is not
       if ( (MST.nodeInGraph(std::get<0>(edge)) && !MST.nodeInGraph(std::get<1>(edge))) ||
@@ -620,6 +631,31 @@ Graph Graph::Prims() {
   }
   return MST;
 }
+/*
+Graph Graph::Kruskals() {
+  //create a graph F (a set of trees), where each vertex in the graph is a separate tree
+  Graph MST;
+  if (!connected()) { return MST; } //If the Graph is not connected, return an empty tree.
+
+  //Add all nodes in original to new Graph
+  for (auto iter : nodeMap) {
+    int data = iter.second->getData();
+    std::string name = iter.first;
+    MST.addNode(data, name);
+  }
+
+  //create a set S containing all the edges in the graph
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesAscending();
+
+  //while S is nonempty and F is not yet spanning
+  while (!edges.empty()) {
+      //remove an edge with minimum weight from S
+
+      //if the removed edge connects two different trees then add it to the forest F, combining two trees into a single tree
+  }
+
+}
+*/
 
 //Returns a list of all Nodes along with their Edges.
 std::string Graph::getInfo() {

@@ -21,7 +21,8 @@ public:
 
   //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
   std::vector< std::tuple<std::string, std::string, int> > getEdges() const;
-  std::vector< std::tuple<std::string, std::string, int> > getEdgesSorted() const;
+  std::vector< std::tuple<std::string, std::string, int> > getEdgesAscending() const;
+  std::vector< std::tuple<std::string, std::string, int> > getEdgesDescending() const;
 
   Graph(const Graph& other); //Copy-Constructor, uses getEdges function
 
@@ -70,13 +71,13 @@ public:
 
   //MST Functions
   Graph Prims();
+  //Graph Kruskals();
 
   //About Graph
   std::string getInfo(); //Returns a list of all Nodes along with their Edges.
   int getNumNodes(); //Returns the number of Nodes
   int getNumEdges();
   bool nodeInGraph(std::string node); //Is the Node in the Graph?
-
 };
 
 #endif // GRAPH_H
