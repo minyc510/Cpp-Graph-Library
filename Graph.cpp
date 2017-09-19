@@ -266,6 +266,16 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const
   return edgeVec;
 }
 
+//GET EDGES
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesSorted() const {
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+
+  std::sort(edges.begin(),edges.end(),
+       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
+       { return std::get<2>(a) < std::get<2>(b); });
+
+  return edges;
+}
 
 //NEIGHBORNAMES: Returns a list of the names of neighbors
 std::vector<std::string> Graph::neighborNames(std::string name) {
@@ -583,8 +593,28 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
   return returnMap;
 }
 
+Graph Graph::Prims() {
+/*
+  //Initialize a tree with a single vertex, chosen arbitrarily from the graph.
+  Graph MST;
+  std::string arbitraryNode = nodeMap.begin()->first;
+  MST.addNode(arbitraryNode);
+  if (!connected()) { return MST; } //If the Graph is not connected, return an empty tree.
 
-// Temporary Function, useful for debugging.
+  //Repeatedly add the lightest edge until all Nodes are in the tree.
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+
+
+  while (MST.getNumNodes() < getNumNodes()) {
+    //Find the lightest edge to a Node not in the tree
+
+
+  }
+
+*/
+}
+
+//Returns a list of all Nodes along with their Edges.
 std::string Graph::getInfo() {
   std::stringstream ss;
   ss << "\n\nGraph Info: " << std::endl;
@@ -602,4 +632,8 @@ std::string Graph::getInfo() {
     ss << "\n\n";
   }
   return ss.str();
+}
+
+int Graph::getNumNodes() {
+  return nodeMap.size();
 }

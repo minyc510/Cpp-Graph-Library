@@ -21,6 +21,7 @@ public:
 
   //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
   std::vector< std::tuple<std::string, std::string, int> > getEdges() const;
+  std::vector< std::tuple<std::string, std::string, int> > getEdgesSorted() const;
 
   Graph(const Graph& other); //Copy-Constructor, uses getEdges function
 
@@ -42,7 +43,7 @@ public:
 
   //Directed Graph Specific Functions
   bool weaklyConnected() const; //Is the Graph weakly connected?
-  bool stronglyConnected(); //UNFINISHED
+  bool stronglyConnected();
 
   //Modification Functions
   Graph transpose() const; //Creates a copy, reverses edges of that copy and returns it.
@@ -67,8 +68,13 @@ public:
   std::vector<std::string> Dijktras(std::string sourceNode, std::string targetNode); //Returns the shortest path from source to target
   std::unordered_map<std::string, int> Dijktras(std::string sourceNode); //Returns a map where keys are nodes reachable from source and values are the shortest distance from source
 
+  //MST Functions
+  Graph Prims();
+
   //About Graph
-  std::string getInfo(); //Temporary Function, useful for debugging.
+  std::string getInfo(); //Returns a list of all Nodes along with their Edges.
+  int getNumNodes(); //Returns the number of Nodes
+
 };
 
 #endif // GRAPH_H

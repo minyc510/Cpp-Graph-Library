@@ -38,9 +38,9 @@ int main() {
   cout << "Creating Directed Graph H." << endl;
   Graph H(true);
   H.addNodes(nodes);
-  H.addEdge("A","B");
-  H.addEdge("B","C");
-  H.addEdge("B","D");
+  H.addEdge("A","B",4);
+  H.addEdge("B","C",2);
+  H.addEdge("B","D",3);
 
   cout << "H:";
   cout << H.getInfo();
@@ -48,6 +48,14 @@ int main() {
   cout << "H weakly connected?: " << H.weaklyConnected() << endl;
   cout << "H strongly connected?: " << H.stronglyConnected() << endl;
 
+  for (auto x : H.getEdges()) {
+    cout << get<2>(x) << " ";
+  }
+  cout << endl;
+  for (auto x : H.getEdgesSorted()) {
+    cout << get<2>(x) << " ";
+  }
+  cout << endl;
 
   cout << "------------------------------------" << endl;
   cout << "Done." << endl;
