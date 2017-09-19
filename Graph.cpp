@@ -645,10 +645,12 @@ Graph Graph::Kruskals() {
   }
 
   //create a set S containing all the edges in the graph
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesAscending();
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesDescending();
 
   //while S is nonempty and F is not yet spanning
-  while (!edges.empty()) {
+  while (!edges.empty() && MST.getNumEdges() != (getNumNodes()-1)) {
+      //If the minimum edges connects two different trees add it to the forest
+
       //remove an edge with minimum weight from S
 
       //if the removed edge connects two different trees then add it to the forest F, combining two trees into a single tree
