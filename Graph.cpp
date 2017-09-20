@@ -94,6 +94,10 @@ bool Graph::addEdge(std::string fromNode, std::string toNode) {
   return addEdge(fromNode, toNode, 1);
 }
 
+bool Graph::addEdge(std::tuple<std::string, std::string, int> edge) {
+  return addEdge(std::get<0>(edge), std::get<1>(edge), std::get<2>(edge));
+}
+
 bool Graph::deleteNode(std::string targetNode) {
   //If node does not exist, return false
   if (nodeMap.find(targetNode) == nodeMap.end()) { return false; }

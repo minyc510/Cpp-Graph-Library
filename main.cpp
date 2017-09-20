@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string edgeString(tuple<string, string, int>);
+string edgeString(tuple<string, string, int>); //Useful for print edges
 
 int main() {
 
@@ -22,6 +22,8 @@ int main() {
   G.addEdge("A", "D", 12);
   G.addEdge("D", "C", 1);
   G.addEdge("B", "C", 35);
+  tuple<string, string, int> edge ("A","B",69);
+  G.addEdge(edge);
 
 
   cout << "\nStandard: " << endl;

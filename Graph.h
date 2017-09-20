@@ -35,6 +35,7 @@ public:
   void addNodes(std::vector<std::pair<int, std::string>> nodes);
   bool addEdge(std::string fromNode, std::string toNode, int weight);
   bool addEdge(std::string fromNode, std::string toNode); //Default weight '1'
+  bool addEdge(std::tuple<std::string, std::string, int> edge);
   bool deleteNode(std::string targetNode);
   bool deleteEdge(std::string fromNode, std::string toNode, int weight);
   bool deleteEdge(std::string fromNode, std::string toNode); //Default weight '1'
