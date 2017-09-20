@@ -4,19 +4,19 @@ This C++ Graph Library consists of a .h and .cpp files, most-importantly: Graph.
  
 ## Code Example
 
-  #include Graph.h
+	#include Graph.h
 
-  int main()
-  {
-    //Declare a Graph object, populate it.	
-    Graph G;
-    G.addNode("A"); 
-    G.addNode("B");
-    G.addEdge("A","B");
-    ...
-    vector<string> shortestPath = G.BFS("A","Z");
-    Graph MST = G.Prims(); //Kruskals() also available
-  }
+ 	int main()
+ 	{
+    		//Declare a Graph object, populate it.	
+    		Graph G;
+    		G.addNode("A"); 
+    		G.addNode("B");
+    		G.addEdge("A","B");
+    		...
+    		vector<string> shortestPath = G.BFS("A","Z");
+    		Graph MST = G.Prims(); //Kruskals() also available
+  	}
 
 ## Motivation
 
