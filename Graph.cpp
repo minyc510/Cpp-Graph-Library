@@ -38,7 +38,9 @@ Graph::Graph(const Graph& original) {
   }
 }
 
-Graph::~Graph() {}
+Graph::~Graph() {
+  for (auto iter : nodeMap) { delete iter.second; }
+}
 
 bool Graph::addNode(int data, std::string name) {
   //If node already exists, return false
