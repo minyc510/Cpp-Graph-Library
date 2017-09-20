@@ -16,16 +16,10 @@ private:
   bool directed = true;
 
 public:
+  //Constructors & Destructor
   Graph(); //Graphs are directed by default
   Graph(bool directed);
-
-  //getEdges: Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
-  std::vector< std::tuple<std::string, std::string, int> > getEdges() const;
-  std::vector< std::tuple<std::string, std::string, int> > getEdgesAscending() const;
-  std::vector< std::tuple<std::string, std::string, int> > getEdgesDescending() const;
-
   Graph(const Graph& other); //Copy-Constructor, uses getEdges function
-
   ~Graph();
 
   //Trivial Functions
@@ -74,8 +68,11 @@ public:
   Graph Prims();
   //Graph Kruskals();
 
-  //About Graph
+  //About Graph Functions
   std::string getInfo(); //Returns a list of all Nodes along with their Edges.
+  std::vector< std::tuple<std::string, std::string, int> > getEdges() const; //Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
+  std::vector< std::tuple<std::string, std::string, int> > getEdgesAscending() const;
+  std::vector< std::tuple<std::string, std::string, int> > getEdgesDescending() const;
   int getNumNodes(); //Returns the number of Nodes
   int getNumEdges();
   bool nodeInGraph(std::string node); //Is the Node in the Graph?

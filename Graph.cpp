@@ -12,9 +12,8 @@ Graph::Graph() {}
 
 Graph::Graph(bool directed) { this->directed = directed; }
 
-//COPY-CONSTRUCTOR
+///Copy Constructor
 Graph::Graph(const Graph& original) {
-
   //Copy over boolean's
   directed = original.directed;
 
@@ -57,14 +56,14 @@ bool Graph::addNode(std::string name) {
   return addNode(1, name);
 }
 
-//Given a vector of strings, insert each string as a Node
+///Given a vector of strings, insert each string as a Node
 void Graph::addNodes(std::vector<std::string> nodes) {
   for (auto node : nodes) {
     addNode(node);
   }
 }
 
-//Given a vector of (int, string) pairs, insert each pair as a Node
+///Given a vector of (int, string) pairs, insert each pair as a Node
 void Graph::addNodes(std::vector<std::pair<int, std::string>> nodes) {
   for (auto nodePair : nodes) {
     addNode(nodePair.first, nodePair.second);
@@ -89,11 +88,12 @@ bool Graph::addEdge(std::string fromNode, std::string toNode, int weight) {
   return true;
 }
 
-//Default edge weight is 1
+///Default edge weight is 1
 bool Graph::addEdge(std::string fromNode, std::string toNode) {
   return addEdge(fromNode, toNode, 1);
 }
 
+///Add Edge using a 3-tuple (nodeA,nodeB,weight)
 bool Graph::addEdge(std::tuple<std::string, std::string, int> edge) {
   return addEdge(std::get<0>(edge), std::get<1>(edge), std::get<2>(edge));
 }
@@ -120,7 +120,6 @@ bool Graph::deleteNode(std::string targetNode) {
   return true;
 }
 
-//Modified DE
 bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
   //If one of the nodes don't exist or no such edge exists, return false
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
@@ -156,8 +155,7 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode) {
   return deleteEdge(fromNode, toNode, 1);
 }
 
-
-//CONNECTED: Is the graph connected? By definition, this is for UNDIRECTED Graphs.
+///connected: Returns true if the Graph is connected, for undirected Graphs.
 bool Graph::connected() {
   if (nodeMap.empty()) { return true;} //An empty Graph is trivially connected
 
@@ -169,7 +167,7 @@ bool Graph::connected() {
 
 }
 
-//weaklyConnected(): Is the graph weakly connected?
+///weaklyConnected: Returns true if the Graph is weakly-connected, for directed Graphs.
 //A directed graph is called weakly connected if replacing all of its
 //directed edges with undirected edges produces a connected (undirected) graph.
 bool Graph::weaklyConnected() const {
@@ -190,7 +188,7 @@ bool Graph::weaklyConnected() const {
   return modifiedCopy.connected();
 }
 
-//stronglyConnected: Is the graph strongly connected?
+///stronglyConnected: Returns true if the Graph is strongly-connected, for directed Graphs.
 //A directed graph is called strongly connected if
 //there is a path in each direction between each pair of vertices of the graph.
 bool Graph::stronglyConnected() {
@@ -205,7 +203,7 @@ bool Graph::stronglyConnected() {
   return (tempSet1.size() == nodeMap.size());
 }
 
-//transpose: reverse the edges
+///transpose: Returns a Graph object with reversed edges of the original Graph.
 Graph Graph::transpose() const {
   //Create a new Graph object.
   Graph graph(directed);
@@ -229,76 +227,12 @@ Graph Graph::transpose() const {
   return graph;
 }
 
-//GET EDGES
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const {
-  std::vector< std::tuple<std::string, std::string, int> > edgeVec;
 
-  //For all Nodes K in nodeMap
-  for (auto iter : nodeMap) {
-    auto K = iter.second; //K is a Node*
-    //For all neighbors N of K
-    for (auto iter1 : *(K->getMapPtr())) {
-      auto tempSet = iter1.second; //tempSet is an multiset
-      //For all weights from K to N, add it to the edgeVec
-      for (int i : tempSet) {
-        std::string nodeA = iter.first;
-        std::string nodeB = iter1.first;
-        std::tuple<std::string, std::string, int> tempTuple(nodeA, nodeB, i);
-        edgeVec.push_back(tempTuple);
-
-      }
-    }
-  }
-
-  //If the Graph is Undirected, post-process to delete duplicates ie (nodeA,nodeB,w) and (nodeB, nodeA,w)
-  if (!directed) {
-    //For every (A,B,w) in edgeVec, delete one (B,A,w)
-    std::vector< std::tuple<std::string, std::string, int> > deleteTheseEdges;
-    for (auto edge : edgeVec) {
-      std::string nodeA = std::get<0>(edge);
-      std::string nodeB = std::get<1>(edge);
-      int weight = std::get<2>(edge);
-      std::tuple<std::string, std::string, int> deleteMe(nodeB, nodeA, weight);
-      if (nodeA > nodeB) //Prevents deleting both duplicates, we just want to delete one to leave a unique edge.
-        deleteTheseEdges.push_back(deleteMe);
-    }
-
-    for (auto edge : deleteTheseEdges) {
-      edgeVec.erase(std::remove(edgeVec.begin(), edgeVec.end(), edge), edgeVec.end());
-    }
-  }
-
-
-  return edgeVec;
-}
-
-//Returns a sorted list of edges from low to high weights
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesAscending() const {
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
-
-  std::sort(edges.begin(),edges.end(),
-       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
-       { return std::get<2>(a) < std::get<2>(b); });
-
-  return edges;
-}
-
-//Returns a sorted list of edges from high to low weights
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesDescending() const {
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
-
-  std::sort(edges.begin(),edges.end(),
-       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
-       { return std::get<2>(a) > std::get<2>(b); });
-
-  return edges;
-}
-
-//NEIGHBORNAMES: Returns a list of the names of neighbors
-std::vector<std::string> Graph::neighborNames(std::string name) {
+///neighborNames: Returns a list of the names of neighbors
+std::vector<std::string> Graph::neighborNames(std::string sourceNode) {
   std::vector<std::string> returnVec;
 
-  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     returnVec.push_back(it.first);
   }
@@ -306,11 +240,11 @@ std::vector<std::string> Graph::neighborNames(std::string name) {
   return returnVec;
 }
 
-//NEIGHBORDISTMIN:  Returns a list of the names of neighbors along with the lowest edge weight to each neighbor
-std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string name) {
+///neighborDistMin: Returns a list of the names of neighbors along with the lowest edge weight to each neighbor
+std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string sourceNode) {
   std::vector<std::pair<std::string, int>> returnVec;
 
-  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     std::pair<std::string, int> tempPair(it.first, *std::min_element(it.second.begin(),it.second.end()));
     returnVec.push_back(tempPair);
@@ -319,11 +253,11 @@ std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string name
   return returnVec;
 }
 
-//Returns a list of the names of neighbors along with the highest edge weight to each neighbor
-std::vector<std::pair<std::string, int>> Graph::neighborDistMax(std::string name) {
+///neighborDistMax: Returns a list of the names of neighbors along with the highest edge weight to each neighbor
+std::vector<std::pair<std::string, int>> Graph::neighborDistMax(std::string sourceNode) {
   std::vector<std::pair<std::string, int>> returnVec;
 
-  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[name]->getMapPtr();
+  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     std::pair<std::string, int> tempPair(it.first, *std::max_element(it.second.begin(),it.second.end()));
     returnVec.push_back(tempPair);
@@ -332,19 +266,21 @@ std::vector<std::pair<std::string, int>> Graph::neighborDistMax(std::string name
   return returnVec;
 }
 
-bool Graph::deleteNeighbors(std::string name) {
-  if (nodeMap.find(name) == nodeMap.end()) { return false; }
+///deleteNeighbors: Removes all neighbors of sourceNode along with all the edges associated with the neighbors.
+bool Graph::deleteNeighbors(std::string sourceNode) {
+  if (nodeMap.find(sourceNode) == nodeMap.end()) { return false; }
 
-  std::vector<std::string> neighbors = neighborNames(name);
+  std::vector<std::string> neighbors = neighborNames(sourceNode);
   for (auto neighbor : neighbors) {
     deleteNode(neighbor);
   }
   return true;
 }
 
-std::set<std::string> Graph::explore(std::string name) {
+///explore: Returns a set of Nodes reachable from sourceNode
+std::set<std::string> Graph::explore(std::string sourceNode) {
   std::set<std::string> reachable; //Will contain all nodes reachable from the passed Node
-  exploreHelper(reachable, name);
+  exploreHelper(reachable, sourceNode);
   return reachable;
 }
 
@@ -358,7 +294,7 @@ void Graph::exploreHelper(std::set<std::string> &visited, std::string v) {
   }
 }
 
-//reachableNames: Returns a list of Nodes reachable from a given sourceNode
+///reachableNames: Returns a list of Nodes reachable from a given sourceNode
 std::vector<std::string> Graph::reachableNames(std::string sourceNode) {
   std::vector<std::string> returnVec;
   std::set<std::string> reachable = explore(sourceNode);
@@ -368,7 +304,7 @@ std::vector<std::string> Graph::reachableNames(std::string sourceNode) {
   return returnVec;
 }
 
-//reachableDists: Returns a list of Nodes and their distances from a given sourceNode (uses BFS)
+///reachableDists: Returns a list of Nodes and their distances from a given sourceNode (uses BFS)
 std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
@@ -404,13 +340,13 @@ std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourc
   return returnVec;
 }
 
-//PATHCHECK: Returns true if there is a (directed) path from fromNode to toNode.
-bool Graph::pathCheck(std::string fromNode, std::string toNode) {
-  std::set<std::string> reachable = explore(fromNode);
-  return (reachable.find(toNode) != reachable.end());
+///pathCheck: Returns true if there is a (directed) path from fromNode to toNode.
+bool Graph::pathCheck(std::string sourceNode, std::string targetNode) {
+  std::set<std::string> reachable = explore(sourceNode);
+  return (reachable.find(targetNode) != reachable.end());
 }
 
-//BFS
+///BFS: Returns the shortest unweighted path from sourceNode to targetNode
 std::vector<std::string> Graph::BFS(std::string sourceNode, std::string targetNode) {
   //If either Node DNE, return an empty vector
   std::vector<std::string> pathVec;
@@ -456,7 +392,7 @@ std::vector<std::string> Graph::BFS(std::string sourceNode, std::string targetNo
   return pathVec;
 }
 
-//DFS - Returns the path from sourceNode to targetNode
+///DFS: Returns the shortest unweighted path from sourceNode to targetNode
 std::vector<std::string> Graph::DFS(std::string sourceNode, std::string targetNode) {
   //If either Node DNE, return an empty vector
   std::vector<std::string> pathVec;
@@ -488,7 +424,7 @@ std::vector<std::string> Graph::DFS(std::string sourceNode, std::string targetNo
   return pathVec;
 }
 
-//DFS - Recursive Function, modifies prevMap
+///DFS - Recursive Function, modifies prevMap
 void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap) {
   if (currentNode == targetNode) { return; }
 
@@ -502,7 +438,7 @@ void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unor
   }
 }
 
-//Dijktras
+///Dijktras: Returns the shorted weighted path from sourceNode to targetNode
 std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string targetNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
@@ -560,7 +496,7 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
   return pathVec;
 }
 
-//Djiktras
+///Djiktras: Returns an unordered_map where keys are Node names and values are the shortest weighted distance to that Node from sourceNode
 std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
   std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
@@ -610,8 +546,8 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
   return returnMap;
 }
 
+///Prims: Returns a MST (as a Graph object)
 Graph Graph::Prims() {
-
   //Initialize a tree with a single vertex, chosen arbitrarily from the graph.
   Graph MST;
   if (!connected()) { return MST; } //If the Graph is not connected, return an empty tree.
@@ -665,7 +601,7 @@ Graph Graph::Kruskals() {
 }
 */
 
-//Returns a list of all Nodes along with their Edges.
+///getInfo: Returns a string of all Nodes along with their Edges.
 std::string Graph::getInfo() {
   std::stringstream ss;
   ss << "\n\nGraph Info: " << std::endl;
@@ -683,6 +619,71 @@ std::string Graph::getInfo() {
     ss << "\n\n";
   }
   return ss.str();
+}
+
+///getEdges: Returns an unsorted vector of edges, where edges are represented with 3-tuples (nodeA, nodeB, weight)
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const {
+  std::vector< std::tuple<std::string, std::string, int> > edgeVec;
+
+  //For all Nodes K in nodeMap
+  for (auto iter : nodeMap) {
+    auto K = iter.second; //K is a Node*
+    //For all neighbors N of K
+    for (auto iter1 : *(K->getMapPtr())) {
+      auto tempSet = iter1.second; //tempSet is an multiset
+      //For all weights from K to N, add it to the edgeVec
+      for (int i : tempSet) {
+        std::string nodeA = iter.first;
+        std::string nodeB = iter1.first;
+        std::tuple<std::string, std::string, int> tempTuple(nodeA, nodeB, i);
+        edgeVec.push_back(tempTuple);
+
+      }
+    }
+  }
+
+  //If the Graph is Undirected, post-process to delete duplicates ie (nodeA,nodeB,w) and (nodeB, nodeA,w)
+  if (!directed) {
+    //For every (A,B,w) in edgeVec, delete one (B,A,w)
+    std::vector< std::tuple<std::string, std::string, int> > deleteTheseEdges;
+    for (auto edge : edgeVec) {
+      std::string nodeA = std::get<0>(edge);
+      std::string nodeB = std::get<1>(edge);
+      int weight = std::get<2>(edge);
+      std::tuple<std::string, std::string, int> deleteMe(nodeB, nodeA, weight);
+      if (nodeA > nodeB) //Prevents deleting both duplicates, we just want to delete one to leave a unique edge.
+        deleteTheseEdges.push_back(deleteMe);
+    }
+
+    for (auto edge : deleteTheseEdges) {
+      edgeVec.erase(std::remove(edgeVec.begin(), edgeVec.end(), edge), edgeVec.end());
+    }
+  }
+
+
+  return edgeVec;
+}
+
+///getEdgesAscending: Returns a sorted list of edges from low to high weights
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesAscending() const {
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+
+  std::sort(edges.begin(),edges.end(),
+       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
+       { return std::get<2>(a) < std::get<2>(b); });
+
+  return edges;
+}
+
+///getEdgesDescending: Returns a sorted list of edges from high to low weights
+std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesDescending() const {
+  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+
+  std::sort(edges.begin(),edges.end(),
+       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
+       { return std::get<2>(a) > std::get<2>(b); });
+
+  return edges;
 }
 
 int Graph::getNumNodes() {
