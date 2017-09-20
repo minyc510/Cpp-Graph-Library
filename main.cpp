@@ -33,7 +33,7 @@ int main() {
   cout << "\nDescending: " << endl;
   for (auto x : G.getEdgesDescending()) { cout << edgeString(x) << " "; }
 
-  cout << "\n\n------------------------------------" << endl;
+  cout << "\n------------------------------------" << endl;
   cout << "Done." << endl;
   cout << "------------------------------------" << endl;
 }
