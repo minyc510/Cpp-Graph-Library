@@ -66,7 +66,7 @@ public:
 
   //MST Functions
   Graph Prims();
-  //Graph Kruskals();
+  Graph Kruskals();
 
   //About Graph Functions
   std::string getInfo(); //Returns a list of all Nodes along with their Edges.

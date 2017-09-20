@@ -14,18 +14,16 @@ int main() {
   vector<string> nodes = {"A", "B", "C", "D"};
 
   //Directed Graph Object
-  Graph G(true);
+  Graph G(false);
   G.addNodes(nodes);
-  for (string node : nodes) { cout << node << " "; }
-  G.addEdge("A", "B", 7);
-  G.addEdge("A", "C", 3);
-  G.addEdge("A", "D", 12);
-  G.addEdge("D", "C", 1);
-  G.addEdge("B", "C", 35);
+  G.addEdge("A", "B", 1);
+  G.addEdge("A", "C", 4);
+  G.addEdge("A", "D", 3);
+  G.addEdge("B", "D", 2);
+  G.addEdge("D", "C", 5);
   tuple<string, string, int> edge ("A","B",69);
   G.addEdge(edge);
-
-
+/*
   cout << "\nStandard: " << endl;
   for (auto x : G.getEdges()) { cout << edgeString(x) << " "; }
 
@@ -34,6 +32,18 @@ int main() {
 
   cout << "\nDescending: " << endl;
   for (auto x : G.getEdgesDescending()) { cout << edgeString(x) << " "; }
+*/
+
+  Graph MST1 = G.Kruskals();
+  Graph MST2 = G.Prims();
+  cout << G.getInfo() << endl;
+  cout << MST1.getInfo() << endl;
+  cout << MST2.getInfo() << endl;
+
+
+
+
+
 
   cout << "\n------------------------------------" << endl;
   cout << "Done." << endl;

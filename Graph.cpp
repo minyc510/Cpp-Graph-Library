@@ -573,7 +573,7 @@ Graph Graph::Prims() {
   }
   return MST;
 }
-/*
+
 Graph Graph::Kruskals() {
   //create a graph F (a set of trees), where each vertex in the graph is a separate tree
   Graph MST;
@@ -591,15 +591,21 @@ Graph Graph::Kruskals() {
 
   //while S is nonempty and F is not yet spanning
   while (!edges.empty() && MST.getNumEdges() != (getNumNodes()-1)) {
-      //If the minimum edges connects two different trees add it to the forest
-
-      //remove an edge with minimum weight from S
-
-      //if the removed edge connects two different trees then add it to the forest F, combining two trees into a single tree
+    //remove an edge with minimum weight from S
+    auto edge = edges.back();
+    edges.pop_back();
+    std::string nodeA = std::get<0>(edge);
+    std::string nodeB = std::get<1>(edge);
+    //if the removed edge connects two different trees then add it to the forest F, combining two trees into a single tree
+    if (!MST.pathCheck(nodeA,nodeB)) {
+      MST.addNode(nodeA);
+      MST.addNode(nodeB);
+      MST.addEdge(nodeA,nodeB,std::get<2>(edge));
+    }
   }
-
+  return MST;
 }
-*/
+
 
 ///getInfo: Returns a string of all Nodes along with their Edges.
 std::string Graph::getInfo() {
