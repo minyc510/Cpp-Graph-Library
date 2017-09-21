@@ -63,6 +63,7 @@ public:
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
   std::vector<std::string> Dijktras(std::string sourceNode, std::string targetNode); //Returns the shortest path from source to target
   std::unordered_map<std::string, int> Dijktras(std::string sourceNode); //Returns a map where keys are nodes reachable from source and values are the shortest distance from source
+  std::unordered_map<std::string, int> BellmanFord(std::string sourceNode);
 
   //MST Functions
   Graph Prims();

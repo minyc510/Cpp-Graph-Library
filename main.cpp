@@ -23,16 +23,6 @@ int main() {
   G.addEdge("D", "C", 5);
   tuple<string, string, int> edge ("A","B",69);
   G.addEdge(edge);
-/*
-  cout << "\nStandard: " << endl;
-  for (auto x : G.getEdges()) { cout << edgeString(x) << " "; }
-
-  cout << "\nAscending: " << endl;
-  for (auto x : G.getEdgesAscending()) { cout << edgeString(x) << " "; }
-
-  cout << "\nDescending: " << endl;
-  for (auto x : G.getEdgesDescending()) { cout << edgeString(x) << " "; }
-*/
 
   Graph MST1 = G.Kruskals();
   Graph MST2 = G.Prims();
@@ -40,6 +30,11 @@ int main() {
   cout << MST1.getInfo() << endl;
   cout << MST2.getInfo() << endl;
 
+  cout << "\n***BELLMAN FORD***\n";
+  unordered_map<string, int> dist = G.BellmanFord("A");
+  for (auto x : dist) {
+    cout << x.first << " " << x.second << endl;
+  }
 
 
 

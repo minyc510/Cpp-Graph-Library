@@ -546,6 +546,49 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
   return returnMap;
 }
 
+
+///BellmanFord: Returns a map where keys are Node names and values are the shortest distance from sourceNode
+std::unordered_map<std::string, int> Graph::BellmanFord(std::string sourceNode) {
+  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
+  std::vector< std::tuple<std::string, std::string, int> > E = getEdges();
+
+  //Initialize Graph
+  std::unordered_map<std::string, int> distance; //Holds the shortest distance to each Node from sourceNode
+  std::unordered_map<std::string, std::string> predecessor; //Holds the previous Node
+  for (auto iter : nodeMap) {
+    distance.emplace(iter.first, infinity);
+    predecessor.emplace(iter.first, "");
+  }
+  distance[sourceNode] = 0;
+
+  //Check Edges
+  for (int i=0; i < getNumNodes()-1; i++) {
+    for (auto edge : E) {
+      std::string nodeA = std::get<0>(edge);
+      std::string nodeB = std::get<1>(edge);
+      int weight = std::get<2>(edge);
+      if (distance[nodeA] + weight < distance[nodeB]) {
+        distance[nodeB] = distance[nodeA] + weight;
+        predecessor[nodeB] = nodeA;
+      }
+    }
+  }
+
+  //Check for negative-weight cycles
+  for (auto edge : E) {
+    std::string nodeA = std::get<0>(edge);
+    std::string nodeB = std::get<1>(edge);
+    int weight = std::get<2>(edge);
+    if (distance[nodeA] + weight < distance[nodeB]) {
+      //NEGATIVE CYCLE
+    }
+  }
+
+  //RETURN
+  return distance;
+}
+
+
 ///Prims: Returns a MST (as a Graph object)
 Graph Graph::Prims() {
   //Initialize a tree with a single vertex, chosen arbitrarily from the graph.
