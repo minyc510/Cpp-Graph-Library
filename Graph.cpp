@@ -161,7 +161,7 @@ bool Graph::connected() {
 
   //Run explore on a random Node
   auto it =  nodeMap.begin();
-  std::set<std::string> tempSet = explore(it->first);
+  std::unordered_set<std::string> tempSet = explore(it->first);
   //Is the set of Nodes reachable == # of all Nodes in the Graph?
   return (tempSet.size() == nodeMap.size());
 
@@ -194,11 +194,11 @@ bool Graph::weaklyConnected() const {
 bool Graph::stronglyConnected() {
   //DFS on arbitraryNode. If arbitraryNode can't reach all other Nodes, return false.
   std::string arbitraryNode = nodeMap.begin()->first;
-  std::set<std::string> tempSet = explore(arbitraryNode);
+  std::unordered_set<std::string> tempSet = explore(arbitraryNode);
   if (tempSet.size() != nodeMap.size()) { return false; }
   //DFS on same arbitraryNode on the transpose of the Graph. If it can reach all other Nodes, the Graph is stronglyConnected.
   Graph T = transpose();
-  std::set<std::string> tempSet1 = T.explore(arbitraryNode);
+  std::unordered_set<std::string> tempSet1 = T.explore(arbitraryNode);
   std::cout << "***" << tempSet1.size() << std::endl;
   return (tempSet1.size() == nodeMap.size());
 }
@@ -278,13 +278,13 @@ bool Graph::deleteNeighbors(std::string sourceNode) {
 }
 
 ///explore: Returns a set of Nodes reachable from sourceNode
-std::set<std::string> Graph::explore(std::string sourceNode) {
-  std::set<std::string> reachable; //Will contain all nodes reachable from the passed Node
+std::unordered_set<std::string> Graph::explore(std::string sourceNode) {
+  std::unordered_set<std::string> reachable; //Will contain all nodes reachable from the passed Node
   exploreHelper(reachable, sourceNode);
   return reachable;
 }
 
-void Graph::exploreHelper(std::set<std::string> &visited, std::string v) {
+void Graph::exploreHelper(std::unordered_set<std::string> &visited, std::string v) {
   visited.insert(v);
   std::vector<std::string> neighbors = neighborNames(v);
 
@@ -297,7 +297,7 @@ void Graph::exploreHelper(std::set<std::string> &visited, std::string v) {
 ///reachableNames: Returns a list of Nodes reachable from a given sourceNode
 std::vector<std::string> Graph::reachableNames(std::string sourceNode) {
   std::vector<std::string> returnVec;
-  std::set<std::string> reachable = explore(sourceNode);
+  std::unordered_set<std::string> reachable = explore(sourceNode);
   for (std::string name : reachable) {
     returnVec.push_back(name);
   }
@@ -342,7 +342,7 @@ std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourc
 
 ///pathCheck: Returns true if there is a (directed) path from fromNode to toNode.
 bool Graph::pathCheck(std::string sourceNode, std::string targetNode) {
-  std::set<std::string> reachable = explore(sourceNode);
+  std::unordered_set<std::string> reachable = explore(sourceNode);
   return (reachable.find(targetNode) != reachable.end());
 }
 
@@ -562,7 +562,7 @@ std::unordered_map<std::string, int> Graph::BellmanFord(std::string sourceNode) 
   distance[sourceNode] = 0;
 
   //Check Edges
-  for (int i=1; i <= getNumNodes()-1; i++) {
+  for (int i=1; i <= numNodes()-1; i++) {
     for (auto edge : E) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
@@ -582,7 +582,14 @@ std::unordered_map<std::string, int> Graph::BellmanFord(std::string sourceNode) 
     int weight = std::get<2>(edge);
     if (distance[nodeA] + weight < distance[nodeB]) {
       //NEGATIVE CYCLE
+      std::cout << "NEGATIVE CYCLE" << std::endl;
+      predecessor[nodeA] = nodeB;
     }
+  }
+
+  for (auto x : predecessor) {
+    std::cout << x.first << " " << x.second << std::endl;
+
   }
 
   //RETURN
@@ -601,11 +608,11 @@ Graph Graph::Prims() {
   //Repeatedly add the lightest edge until all Nodes are in the tree.
   std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesAscending();
 
-  while (MST.getNumEdges() != (getNumNodes()-1)) { //There are |N-1| Edges in a MST
+  while (MST.numEdges() != (numNodes()-1)) { //There are |N-1| Edges in a MST
     for (auto edge : edges) {
       //If one Node is in the tree and the other is not
-      if ( (MST.nodeInGraph(std::get<0>(edge)) && !MST.nodeInGraph(std::get<1>(edge))) ||
-           (!MST.nodeInGraph(std::get<0>(edge)) && MST.nodeInGraph(std::get<1>(edge))) )
+      if ( (MST.nodeExists(std::get<0>(edge)) && !MST.nodeExists(std::get<1>(edge))) ||
+           (!MST.nodeExists(std::get<0>(edge)) && MST.nodeExists(std::get<1>(edge))) )
       {
         //add Nodes and Edge to MST
         MST.addNode(std::get<0>(edge));
@@ -634,7 +641,7 @@ Graph Graph::Kruskals() {
   std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesDescending();
 
   //while S is nonempty and F is not yet spanning
-  while (!edges.empty() && MST.getNumEdges() != (getNumNodes()-1)) {
+  while (!edges.empty() && MST.numEdges() != (numNodes()-1)) {
     //remove an edge with minimum weight from S
     auto edge = edges.back();
     edges.pop_back();
@@ -736,13 +743,13 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesDescendi
   return edges;
 }
 
-int Graph::getNumNodes() {
+int Graph::numNodes() {
   return nodeMap.size();
 }
 
-int Graph::getNumEdges() {
+int Graph::numEdges() {
   return getEdges().size();
 }
-bool Graph::nodeInGraph(std::string name) {
+bool Graph::nodeExists(std::string name) {
   return (nodeMap.find(name) != nodeMap.end());
 }

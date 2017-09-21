@@ -51,8 +51,8 @@ public:
   bool deleteNeighbors(std::string name);
 
   //Explore Functions
-  std::set<std::string> explore(std::string sourceNode); //Returns a set of Nodes reachable from the source Node
-  void exploreHelper(std::set<std::string> &visited, std::string name);
+  std::unordered_set<std::string> explore(std::string sourceNode); //Returns a set of Nodes reachable from the source Node
+  void exploreHelper(std::unordered_set<std::string> &visited, std::string name);
   std::vector<std::string> reachableNames(std::string sourceNode); //Returns a list of Nodes that are reachable from the target
   std::vector<std::pair<std::string, int>> reachableDists(std::string sourceNode); //Includes distances
   bool pathCheck(std::string fromNode, std::string toNode);
@@ -74,9 +74,9 @@ public:
   std::vector< std::tuple<std::string, std::string, int> > getEdges() const; //Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
   std::vector< std::tuple<std::string, std::string, int> > getEdgesAscending() const;
   std::vector< std::tuple<std::string, std::string, int> > getEdgesDescending() const;
-  int getNumNodes(); //Returns the number of Nodes
-  int getNumEdges();
-  bool nodeInGraph(std::string node); //Is the Node in the Graph?
+  int numNodes(); //Returns the number of Nodes
+  int numEdges();
+  bool nodeExists(std::string node); //Is the Node in the Graph?
 };
 
 #endif // GRAPH_H
