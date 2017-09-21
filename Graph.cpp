@@ -562,11 +562,12 @@ std::unordered_map<std::string, int> Graph::BellmanFord(std::string sourceNode) 
   distance[sourceNode] = 0;
 
   //Check Edges
-  for (int i=0; i < getNumNodes()-1; i++) {
+  for (int i=1; i <= getNumNodes()-1; i++) {
     for (auto edge : E) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
       int weight = std::get<2>(edge);
+      if (distance[nodeA] == infinity) { continue; } //infinity + weight will overflow so this guards against that
       if (distance[nodeA] + weight < distance[nodeB]) {
         distance[nodeB] = distance[nodeA] + weight;
         predecessor[nodeB] = nodeA;

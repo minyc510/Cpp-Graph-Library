@@ -13,7 +13,7 @@ int main() {
 
   vector<string> nodes = {"A", "B", "C", "D"};
 
-  //Directed Graph Object
+  //Undirected Graph Object
   Graph G(false);
   G.addNodes(nodes);
   G.addEdge("A", "B", 1);
@@ -31,7 +31,15 @@ int main() {
   cout << MST2.getInfo() << endl;
 
   cout << "\n***BELLMAN FORD***\n";
-  unordered_map<string, int> dist = G.BellmanFord("A");
+  Graph Q;
+  Q.addNodes(nodes);
+  Q.addEdge("A","B", 1);
+  Q.addEdge("B","C", 7);
+  Q.addEdge("C","D", 2);
+  Q.addEdge("A","D", 3);
+  Q.addEdge("D","C", 1);
+  cout << Q.getNumNodes() << endl;
+  unordered_map<string, int> dist = Q.BellmanFord("A");
   for (auto x : dist) {
     cout << x.first << " " << x.second << endl;
   }
