@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <limits> //Simulate infinity
 #include <queue>
 
@@ -692,6 +693,16 @@ std::string Graph::getInfo() {
   return ss.str();
 }
 
+///getNodes: Returns a vector of the names of all Nodes
+std::vector<std::string> Graph::getNodes() const {
+  std::vector<std::string> names;
+  for (auto iter : nodeMap) {
+    names.push_back(iter.first);
+  }
+  return names;
+
+}
+
 ///getEdges: Returns an unsorted vector of edges, where edges are represented with 3-tuples (nodeA, nodeB, weight)
 std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const {
   std::vector< std::tuple<std::string, std::string, int> > edgeVec;
@@ -766,4 +777,27 @@ int Graph::numEdges() {
 }
 bool Graph::nodeExists(std::string name) {
   return (nodeMap.find(name) != nodeMap.end());
+}
+
+///saveToFile: Saves a Graph object as a .txt file for later retrieval.
+void Graph::saveToFile(std::string outputFileName) {
+  //Prep .txt file
+  std::ofstream output;
+  char specialChar = (char)035;
+  output.open (outputFileName+".txt");
+
+  //Write Nodes
+  output << specialChar << "NODES:          #Do not edit this line!" << std::endl;
+  for (auto iter : nodeMap) {
+      output << iter.first << std::endl;
+  }
+
+  //Write Edges
+  output << specialChar <<"EDGES:           #Do not edit this line!" << std::endl;
+  for (auto tuple : getEdges()) {
+    output << std::get<0>(tuple) << specialChar << std::get<1>(tuple) << specialChar << std::get<2>(tuple) << std::endl;
+  }
+
+  //Close .txt  file
+  output.close();
 }

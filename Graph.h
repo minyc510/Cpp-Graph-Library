@@ -76,12 +76,16 @@ public:
 
   //About Graph Functions
   std::string getInfo(); //Returns a list of all Nodes along with their Edges.
+  std::vector<std::string> getNodes() const;
   std::vector< std::tuple<std::string, std::string, int> > getEdges() const; //Returns a vector of Edges, where Edges are represented with a 3-tuple (nodeA,nodeB,weight)
   std::vector< std::tuple<std::string, std::string, int> > getEdgesAscending() const;
   std::vector< std::tuple<std::string, std::string, int> > getEdgesDescending() const;
   int numNodes(); //Returns the number of Nodes
   int numEdges();
   bool nodeExists(std::string node); //Is the Node in the Graph?
+
+  //Other
+  void saveToFile(std::string outputName);
 };
 
 #endif // GRAPH_H
