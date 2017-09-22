@@ -548,52 +548,66 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
 
 
 ///BellmanFord: Returns a map where keys are Node names and values are the shortest distance from sourceNode
-std::unordered_map<std::string, int> Graph::BellmanFord(std::string sourceNode) {
+std::tuple<std::unordered_map<std::string, int>, std::unordered_map<std::string, std::string>, bool> Graph::BellmanFord(std::string sourceNode) {
   int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::vector< std::tuple<std::string, std::string, int> > E = getEdges();
+  std::vector< std::tuple<std::string, std::string, int> > Edges = getEdges();
+  bool negativeCycle = false;
 
-  //Initialize Graph
-  std::unordered_map<std::string, int> distance; //Holds the shortest distance to each Node from sourceNode
-  std::unordered_map<std::string, std::string> predecessor; //Holds the previous Node
+  //Initialize Dist & Prev maps
+  std::unordered_map<std::string, int> Dist; //Holds the shortest distance to each Node from sourceNode
+  std::unordered_map<std::string, std::string> Prev; //Holds the previous Node
   for (auto iter : nodeMap) {
-    distance.emplace(iter.first, infinity);
-    predecessor.emplace(iter.first, "");
+    Dist.emplace(iter.first, infinity);
+    Prev.emplace(iter.first, "");
   }
-  distance[sourceNode] = 0;
+  Dist[sourceNode] = 0;
 
-  //Check Edges
+  //Repeatedly "Relax" Edges
   for (int i=1; i <= numNodes()-1; i++) {
-    for (auto edge : E) {
+    for (auto edge : Edges) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
       int weight = std::get<2>(edge);
-      if (distance[nodeA] == infinity) { continue; } //infinity + weight will overflow so this guards against that
-      if (distance[nodeA] + weight < distance[nodeB]) {
-        distance[nodeB] = distance[nodeA] + weight;
-        predecessor[nodeB] = nodeA;
+      if (Dist[nodeA] == infinity) { continue; } //infinity + weight will overflow so this guards against that
+      if (Dist[nodeA] + weight < Dist[nodeB]) {
+        Dist[nodeB] = Dist[nodeA] + weight;
+        Prev[nodeB] = nodeA;
       }
     }
   }
 
-  //Check for negative-weight cycles
-  for (auto edge : E) {
+  //Check for Negative Cycles
+  for (auto edge : Edges) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
     int weight = std::get<2>(edge);
-    if (distance[nodeA] + weight < distance[nodeB]) {
-      //NEGATIVE CYCLE
-      std::cout << "NEGATIVE CYCLE" << std::endl;
-      predecessor[nodeA] = nodeB;
+    if (Dist[nodeA] == infinity) { continue; } //infinity + weight will overflow so this guards against that
+    if (Dist[nodeA] + weight < Dist[nodeB]) {
+      //Negative Cycle Detected:
+      Prev[nodeA] = nodeB;
+      negativeCycle = true;
     }
   }
 
-  for (auto x : predecessor) {
-    std::cout << x.first << " " << x.second << std::endl;
+  //Return
+  return std::make_tuple(Dist, Prev, negativeCycle);
+}
 
+std::unordered_map<std::string, int> Graph::BellmanFordDist(std::string sourceNode) {
+  return std::get<0>(BellmanFord(sourceNode));
+}
+std::unordered_map<std::string, std::string> Graph::BellmanFordPrev(std::string sourceNode) {
+  return std::get<1>(BellmanFord(sourceNode));
+}
+bool Graph::NegativeCycle() {
+  //Warning! Very inefficient, runs BellmanFord using every Node as a source until a negCycle is detected or none at all.
+  for (auto iter : nodeMap) {
+    if (std::get<2>(BellmanFord(iter.first))) {
+      return true;
+    }
   }
+  return false;
 
-  //RETURN
-  return distance;
 }
 
 

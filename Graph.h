@@ -63,7 +63,13 @@ public:
   void DFShelper(std::string sourceNode, std::string targetNode, std::unordered_map<std::string, std::string> &prevMap);
   std::vector<std::string> Dijktras(std::string sourceNode, std::string targetNode); //Returns the shortest path from source to target
   std::unordered_map<std::string, int> Dijktras(std::string sourceNode); //Returns a map where keys are nodes reachable from source and values are the shortest distance from source
-  std::unordered_map<std::string, int> BellmanFord(std::string sourceNode);
+
+  //BellmanFord: Returns a 3-tuple containing the Dist and Prev maps, as well as a boolean for the existence of a negative cycle
+  std::tuple<std::unordered_map<std::string, int>, std::unordered_map<std::string, std::string>, bool> BellmanFord(std::string sourceNode);
+  std::unordered_map<std::string, int> BellmanFordDist(std::string sourceNode); //Returns just the Dist map
+  std::unordered_map<std::string, std::string> BellmanFordPrev(std::string sourceNode); //Returns just the Prev map
+  bool NegativeCycle(); //Does the graph contain a negCycle? Warning!: Exponential Run-Time
+
 
   //MST Functions
   Graph Prims();
