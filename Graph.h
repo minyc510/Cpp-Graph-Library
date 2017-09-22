@@ -70,7 +70,6 @@ public:
   std::unordered_map<std::string, std::string> BellmanFordPrev(std::string sourceNode); //Returns just the Prev map
   bool NegativeCycle(); //Does the graph contain a negCycle? Warning!: Exponential Run-Time
 
-
   //MST Functions
   Graph Prims();
   Graph Kruskals();
