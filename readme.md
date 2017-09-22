@@ -20,7 +20,7 @@ This C++ Graph Library consists of a .h and .cpp files, most-importantly: Graph.
 
 ## Motivation
 
-Writing this Graph library was really a tool for learning more about Graphs and further cementing my experience with C++. The idea came to me when working on a homework assignment for my 'Algorithm Design and Analysis' class (ie CSE 101 at UCSD) which involved coding a Graph algorithm, where having a Graph library would have been useful. 
+Rather than writing this Graph library for practical use, it was really a tool for learning more about Graphs and further cementing my experience with C++. The idea came to me when working on a homework assignment for my 'Algorithm Design and Analysis' class (ie CSE 101 at UCSD) which involved coding a Graph algorithm, where having a Graph library would have been useful. 
 
 ## Installation
 
