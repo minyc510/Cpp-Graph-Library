@@ -86,6 +86,7 @@ public:
 
   //Other
   void saveToFile(std::string outputName);
+  Graph openFile(std::string fileName);
 };
 
 #endif // GRAPH_H

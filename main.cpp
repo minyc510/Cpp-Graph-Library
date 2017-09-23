@@ -21,6 +21,8 @@ int main() {
   Q.addEdge("D","A", -3);
 
   Q.saveToFile("G");
+  cout << "Graph Saved." << endl;
+  Q.openFile("G.txt");
 
 
 

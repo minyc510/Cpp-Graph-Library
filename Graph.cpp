@@ -783,21 +783,66 @@ bool Graph::nodeExists(std::string name) {
 void Graph::saveToFile(std::string outputFileName) {
   //Prep .txt file
   std::ofstream output;
-  char specialChar = (char)035;
+  char specialChar = '%';
   output.open (outputFileName+".txt");
 
   //Write Nodes
-  output << specialChar << "NODES:          #Do not edit this line!" << std::endl;
+  output << specialChar << std::endl;
+  output << specialChar+"NODES:          #Do not edit this line!" << std::endl;
   for (auto iter : nodeMap) {
       output << iter.first << std::endl;
   }
 
   //Write Edges
-  output << specialChar <<"EDGES:           #Do not edit this line!" << std::endl;
+  output << specialChar+"EDGES:           #Do not edit this line!" << std::endl;
   for (auto tuple : getEdges()) {
     output << std::get<0>(tuple) << specialChar << std::get<1>(tuple) << specialChar << std::get<2>(tuple) << std::endl;
   }
 
   //Close .txt  file
   output.close();
+}
+
+///openFile: Extracts a graph that was saved. Corrupt files return an empty Graph.
+Graph Graph::openFile(std::string fileName) {
+  Graph G; //To be return'd
+
+  //Open .txt file
+  std::ifstream myfile (fileName);
+  char specialChar = '%';
+  std::string line;
+
+  //File is Valid:
+  if (myfile.is_open()) {
+
+    //Correct Header Check
+    getline (myfile, line);
+    if (line != specialChar + "NODES:          #Do not edit this line!") { return G; }
+
+    //Read line-by-line
+    bool readingNodes = true;
+    while ( getline (myfile,line) ) {
+
+      //If specialChar detected
+      if (line[0] == specialChar) {
+        readingNodes = false;
+        std::cout << "Finished reading in Nodes." << std::endl;
+      }
+
+      //Currently reading Nodes
+      if (readingNodes) {
+        std::cout << "Adding Node: " << line << std::endl;
+        G.addNode(line);
+      }
+
+      //Currently reading Edges
+      else {
+        //Sweep line separating the sourceNode, targetNode, and then the Edge
+      }
+    }
+    myfile.close();
+  }
+
+  //If the file name is invalid it will just return an empty Graph.
+  return G;
 }
