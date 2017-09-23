@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <limits> //Simulate infinity
 #include <queue>
 
@@ -34,6 +35,60 @@ Graph::Graph(const Graph& original) {
     double weight = std::get<2>(edge);
 
     this->addEdge(nodeA,nodeB,weight);
+  }
+}
+
+///Construct from File - When calling need to cast to string ie Graph G(string("file.txt"));
+Graph::Graph(std::string inputFileName) {
+  //Open .txt file
+  std::ifstream file (inputFileName);
+  char specialChar = '%';
+  char separator = '^';
+  std::string line;
+
+  //If the file is invalid, stop.
+  if (!file.is_open()) { return; }
+
+  //Read Header
+  getline (file, line);
+  if (line == specialChar + std::string("PERSISTANT GRAPH: DIRECTED (Do not edit this line)")) { directed = true; }
+  else if (line == specialChar + std::string("PERSISTANT GRAPH: UNDIRECTED (Do not edit this line)")) { directed = false; }
+  else { return; } //Corrupt File
+
+  getline (file, line);
+  if (line != "---------------------------------------------------------") { return; } //Corrupt File
+
+  //Read Node Header
+  getline (file, line);
+  if (line != specialChar + std::string("NODES (Do not edit this line):")) { return; } //Corrupt File
+
+  //Read Nodes
+  getline (file, line);
+  while (line[0] != specialChar) {
+    //Split up Node name and Node data using the separator character
+    std::string nodeName = line.substr(0, line.find(separator));
+    std::string dataString = line.substr(line.find(separator)+1);
+    double nodeData = std::stod(dataString);
+
+    //Add Node to Graph, read next line
+    addNode(nodeData, nodeName);
+    getline (file, line);
+  }
+
+  //Read Edges
+  if (line != specialChar + std::string("EDGES (Do not edit this line):")) { return; } //Corrupt File
+  while (getline (file, line)) {
+    //Split up Edge into sourceNode, targetNode, and weight
+    std::string sourceNode = line.substr(0, line.find(separator));
+    line = line.substr(line.find(separator)+1);
+    std::string targetNode = line.substr(0, line.find(separator));
+    std::string weightString = line.substr(line.find(separator)+1);
+    double weight = std::stod(weightString);
+
+    std::cout << sourceNode << " " << targetNode << " " << weight << std::endl;
+
+    //Add Edge to Graph
+    addEdge(sourceNode, targetNode, weight);
   }
 }
 
@@ -766,4 +821,33 @@ int Graph::numEdges() {
 }
 bool Graph::nodeExists(std::string name) {
   return (nodeMap.find(name) != nodeMap.end());
+}
+
+///saveGraph: Saves a Graph object as a .txt file for later retrieval
+bool Graph::saveGraph(std::string outputFileName) {
+  //Prep .txt file
+  std::ofstream output;
+  char specialChar = '%';
+  char separator = '^';
+  output.open (outputFileName+".txt");
+
+  //Write Header, includes directed bool
+  if (directed) { output << specialChar << "PERSISTANT GRAPH: DIRECTED (Do not edit this line)" << std::endl; }
+  else { output << specialChar << "PERSISTANT GRAPH: UNDIRECTED (Do not edit this line)" << std::endl; }
+  output << "---------------------------------------------------------" << std::endl;
+
+  //Write Nodes
+  output << specialChar << "NODES (Do not edit this line):" << std::endl;
+  for (auto iter : nodeMap) {
+      output << iter.first << separator << nodeMap[iter.first]->getData() << std::endl;
+  }
+
+  //Write Edges
+  output << specialChar << "EDGES (Do not edit this line):" << std::endl;
+  for (auto tuple : getEdges()) {
+    output << std::get<0>(tuple) << separator << std::get<1>(tuple) << separator << std::get<2>(tuple) << std::endl;
+  }
+
+  //Close .txt  file
+  output.close();
 }

@@ -20,6 +20,7 @@ public:
   Graph(); //Graphs are directed by default
   Graph(bool directed);
   Graph(const Graph& other); //Copy-Constructor, uses getEdges function
+  Graph(std::string inputFileName); //Constructs Graph from .txt file
   ~Graph();
 
   //Trivial Functions
@@ -82,6 +83,10 @@ public:
   int numNodes(); //Returns the number of Nodes
   int numEdges();
   bool nodeExists(std::string node); //Is the Node in the Graph?
+
+  //Persistent Graph Functions
+  bool saveGraph(std::string outputFileName);
+
 };
 
 #endif // GRAPH_H

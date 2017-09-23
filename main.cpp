@@ -3,6 +3,7 @@
 
 #include "Graph.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -12,21 +13,22 @@ string edgeString(tuple<string, string, int>); //Useful for print edges
 int main() {
 
   vector<string> nodes = {"A", "B", "C", "D"};
+  Graph G;
+  G.addNode(1.12314, "A");
+  G.addNode(-7.3412, "B");
+  G.addNode(420, "C");
+  G.addNode(-12423, "D");
 
-  cout << "\n***BELLMAN FORD***\n";
-  Graph Q;
-  Q.addNodes(nodes);
-  Q.addEdge("A","B", 1);
-  Q.addEdge("B","C", 7);
-  Q.addEdge("C","D", 2);
-  Q.addEdge("D","A", -3);
+  G.addEdge("A","B", 1);
+  G.addEdge("B","C", -714.32);
+  G.addEdge("C","D", 420);
+  G.addEdge("D","A", -3);
 
-  auto triTuple = Q.BellmanFord("D");
-  cout << "Neg bool: " << Q.NegativeCycle() << endl;
+  G.saveGraph("Yee");
+  Graph F(string("Yee.txt"));
 
-
-
-
+  cout << G.getInfo();
+  cout << F.getInfo();
 
 
   cout << "\n------------------------------------" << endl;
