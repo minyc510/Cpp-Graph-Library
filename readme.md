@@ -22,8 +22,8 @@ No external libraries (such as Boost) were used in this project, except for the 
     	  Graph MST = G.Prims(); //Kruskals() also available
     	  MST.saveGraph("MinimumSpanningTree");
 
-	  //Retrieve Graph object from .txt file
-	  Graph F(string("NetworkConnections.txt"));
+    	  //Retrieve Graph object from .txt file
+    	  Graph F(string("NetworkConnections.txt"));
   	}
 
 ## Motivation
