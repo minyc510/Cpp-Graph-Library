@@ -1,6 +1,10 @@
 ## Synopsis
 
-This C++ Graph Library consists of a .h and .cpp files, most-importantly: Graph.g and Graph.cpp. Including these files will allow the user to create 'Graph' objects which can be used for whatever Graph-related problem a user may need to solve.
+This C++ Graph Library consists of a .h and .cpp files, most-importantly: Graph.g and Graph.cpp. Including these files will allow the user to instantiate 'Graph' objects which can be used for whatever Graph-related problem a user may need to solve.
+
+These Graph objects also have a persistent feature: they can be written to disk as .txt files for later retrieval through a read-from-file Graph constructor. 
+
+No external libraries (such as Boost) were used in this project, except for the C++ Standard Template Library for access to STL data-structures.
  
 ## Code Example
 
@@ -16,6 +20,10 @@ This C++ Graph Library consists of a .h and .cpp files, most-importantly: Graph.
     	  ...
     	  vector<string> shortestPath = G.BFS("A","Z");
     	  Graph MST = G.Prims(); //Kruskals() also available
+    	  MST.saveGraph("MinimumSpanningTree");
+
+	  //Retrieve Graph object from .txt file
+	  Graph F(string("NetworkConnections.txt"));
   	}
 
 ## Motivation
