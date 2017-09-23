@@ -20,8 +20,8 @@ int main() {
   G.addNode(-12423, "D");
 
   G.addEdge("A","B", 1);
-  G.addEdge("B","C", -714.32);
-  G.addEdge("C","D", 420);
+  G.addEdge("B","C", -714234.322323);
+  G.addEdge("C","D", 313412341234123);
   G.addEdge("D","A", -3);
 
   G.saveGraph("Yee");

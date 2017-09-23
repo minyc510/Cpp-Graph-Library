@@ -730,10 +730,11 @@ Graph Graph::Kruskals() {
 ///getInfo: Returns a string of all Nodes along with their Edges.
 std::string Graph::getInfo() {
   std::stringstream ss;
+  ss << std::fixed; //Prevents scientific-notation
   ss << "\n\nGraph Info: " << std::endl;
   //For Every Node
   for (auto iterA : nodeMap) {
-    ss << "[" << iterA.first << "] ";
+    ss << "[" << iterA.first << ": " << iterA.second->getData() << "] ";
     //For Every Neighbor of Node
     for (auto iterB : *(iterA.second->getMapPtr())) {
       ss << "("<< iterB.first << "): ";
@@ -830,6 +831,7 @@ bool Graph::saveGraph(std::string outputFileName) {
   char specialChar = '%';
   char separator = '^';
   output.open (outputFileName+".txt");
+  output << std::fixed; //Prevents scientific-notation
 
   //Write Header, includes directed bool
   if (directed) { output << specialChar << "PERSISTANT GRAPH: DIRECTED (Do not edit this line)" << std::endl; }
