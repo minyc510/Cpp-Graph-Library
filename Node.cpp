@@ -4,7 +4,7 @@
 #include "Node.h"
 #include <utility>
 
-Node::Node(int data, std::string name) {
+Node::Node(double data, std::string name) {
   this->data = data;
   this->name = name;
   //Dynamically allocate neighborMap
@@ -28,7 +28,7 @@ void Node::addNeighbor(std::string neighborName, double weight) {
   (*neighborMap)[neighborName].insert(weight);
 }
 
-int Node::getData() {
+double Node::getData() {
   return data;
 }
 

@@ -41,7 +41,7 @@ Graph::~Graph() {
   for (auto iter : nodeMap) { delete iter.second; }
 }
 
-bool Graph::addNode(int data, std::string name) {
+bool Graph::addNode(double data, std::string name) {
   //If node already exists, return false
   if (nodeMap.find(name) != nodeMap.end()) { return false; }
 
@@ -63,8 +63,8 @@ void Graph::addNodes(std::vector<std::string> nodes) {
   }
 }
 
-///Given a vector of (int, string) pairs, insert each pair as a Node
-void Graph::addNodes(std::vector<std::pair<int, std::string>> nodes) {
+///Given a vector of (double, string) pairs, insert each pair as a Node
+void Graph::addNodes(std::vector<std::pair<double, std::string>> nodes) {
   for (auto nodePair : nodes) {
     addNode(nodePair.first, nodePair.second);
   }
@@ -210,7 +210,7 @@ Graph Graph::transpose() const {
 
   //Add all existing nodes to the new Graph
   for (auto iter : nodeMap) {
-    int data = iter.second->getData();
+    double data = iter.second->getData();
     graph.addNode(data, iter.first);
   }
 
@@ -646,7 +646,7 @@ Graph Graph::Kruskals() {
 
   //Add all nodes in original to new Graph
   for (auto iter : nodeMap) {
-    int data = iter.second->getData();
+    double data = iter.second->getData();
     std::string name = iter.first;
     MST.addNode(data, name);
   }

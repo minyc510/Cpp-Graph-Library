@@ -12,7 +12,7 @@
 class Node {
 
 private:
-  int data;
+  double data;
   std::string name;
 
   //neighborMap: List of Nodes that this node has an edge to
@@ -21,13 +21,13 @@ private:
   std::unordered_set<std::string> neighborOfSet;
 
 public:
-  Node(int data, std::string name);
+  Node(double data, std::string name);
   ~Node();
 
   void addNeighbor(std::string neighborName, double weight);
 
   //Access
-  int getData();
+  double getData();
   std::unordered_map<std::string, std::multiset<double>>* getMapPtr();
   std::unordered_set<std::string>& getSetRef();
 };

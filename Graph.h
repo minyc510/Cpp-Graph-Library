@@ -23,10 +23,10 @@ public:
   ~Graph();
 
   //Trivial Functions
-  bool addNode(int data, std::string name);
+  bool addNode(double data, std::string name);
   bool addNode(std::string name); //Default data-value '1'
   void addNodes(std::vector<std::string> nodes);
-  void addNodes(std::vector<std::pair<int, std::string>> nodes);
+  void addNodes(std::vector<std::pair<double, std::string>> nodes);
   bool addEdge(std::string fromNode, std::string toNode, double weight);
   bool addEdge(std::string fromNode, std::string toNode); //Default weight '1'
   bool addEdge(std::tuple<std::string, std::string, double> edge);
