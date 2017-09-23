@@ -16,7 +16,7 @@ private:
   std::string name;
 
   //neighborMap: List of Nodes that this node has an edge to
-  std::unordered_map<std::string, std::multiset<int>>* neighborMap;
+  std::unordered_map<std::string, std::multiset<double>>* neighborMap;
   //neighborSet: List of Nodes that have an edge to this Node
   std::unordered_set<std::string> neighborOfSet;
 
@@ -24,11 +24,11 @@ public:
   Node(int data, std::string name);
   ~Node();
 
-  void addNeighbor(std::string neighborName, int weight);
+  void addNeighbor(std::string neighborName, double weight);
 
   //Access
   int getData();
-  std::unordered_map<std::string, std::multiset<int>>* getMapPtr();
+  std::unordered_map<std::string, std::multiset<double>>* getMapPtr();
   std::unordered_set<std::string>& getSetRef();
 };
 #endif // NODE_H

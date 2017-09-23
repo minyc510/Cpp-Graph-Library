@@ -27,11 +27,11 @@ Graph::Graph(const Graph& original) {
   }
 
   //Add all edges in original to new Graph
-  std::vector< std::tuple<std::string, std::string, int> > edgeVec = original.getEdges();
+  std::vector< std::tuple<std::string, std::string, double> > edgeVec = original.getEdges();
   for (auto edge : edgeVec) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
-    int weight = std::get<2>(edge);
+    double weight = std::get<2>(edge);
 
     this->addEdge(nodeA,nodeB,weight);
   }
@@ -70,7 +70,7 @@ void Graph::addNodes(std::vector<std::pair<int, std::string>> nodes) {
   }
 }
 
-bool Graph::addEdge(std::string fromNode, std::string toNode, int weight) {
+bool Graph::addEdge(std::string fromNode, std::string toNode, double weight) {
   //If one of the nodes don't exist, return false
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
   if (nodeMap.find(toNode) == nodeMap.end()) { return false; }
@@ -94,7 +94,7 @@ bool Graph::addEdge(std::string fromNode, std::string toNode) {
 }
 
 ///Add Edge using a 3-tuple (nodeA,nodeB,weight)
-bool Graph::addEdge(std::tuple<std::string, std::string, int> edge) {
+bool Graph::addEdge(std::tuple<std::string, std::string, double> edge) {
   return addEdge(std::get<0>(edge), std::get<1>(edge), std::get<2>(edge));
 }
 
@@ -120,15 +120,15 @@ bool Graph::deleteNode(std::string targetNode) {
   return true;
 }
 
-bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
+bool Graph::deleteEdge(std::string fromNode, std::string toNode, double weight) {
   //If one of the nodes don't exist or no such edge exists, return false
   if (nodeMap.find(fromNode) == nodeMap.end()) { return false; }
   if (nodeMap.find(toNode) == nodeMap.end()) { return false; }
-  std::unordered_map<std::string, std::multiset<int>>& neighborMapRef = *(nodeMap[fromNode]->getMapPtr());
+  std::unordered_map<std::string, std::multiset<double>>& neighborMapRef = *(nodeMap[fromNode]->getMapPtr());
   if (neighborMapRef.find(toNode) == neighborMapRef.end()) { return false; }
 
   //Delete weight from multiset
-  std::multiset<int>& set = neighborMapRef[toNode];
+  std::multiset<double>& set = neighborMapRef[toNode];
   set.erase(weight);
 
   //If that was the last edge from fromNode to toNode, delete that (key,value) pair from getMapPtr()
@@ -138,10 +138,10 @@ bool Graph::deleteEdge(std::string fromNode, std::string toNode, int weight) {
 
   //If the Graph is undirected, also delete the "Inverse-Edge"
   if (!directed) {
-	  std::unordered_map<std::string, std::multiset<int>>& neighborMapRef1 = *(nodeMap[toNode]->getMapPtr());
+	  std::unordered_map<std::string, std::multiset<double>>& neighborMapRef1 = *(nodeMap[toNode]->getMapPtr());
 
 	  //Delete weight from multiset
-	  std::multiset<int>& set1 = neighborMapRef1[fromNode];
+	  std::multiset<double>& set1 = neighborMapRef1[fromNode];
 	  set1.erase(weight);
 
 	  //If that was the last edge from fromNode to toNode, delete that (key,value) pair from getMapPtr()
@@ -176,11 +176,11 @@ bool Graph::weaklyConnected() const {
   //Create a copy of this graph
   Graph modifiedCopy(*this);
   //Replace all directed edges with undirected edges (ie for all edges <A,B,w> add <B,A,w>)
-  std::vector< std::tuple<std::string, std::string, int> > edgeVec = modifiedCopy.getEdges();
+  std::vector< std::tuple<std::string, std::string, double> > edgeVec = modifiedCopy.getEdges();
   for (auto edge : edgeVec) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
-    int weight = std::get<2>(edge);
+    double weight = std::get<2>(edge);
     modifiedCopy.addEdge(nodeB, nodeA, weight);
   }
 
@@ -215,11 +215,11 @@ Graph Graph::transpose() const {
   }
 
   //For all edges A,B,w in the original, add B,A,w to the copy
-  std::vector< std::tuple<std::string, std::string, int> > edgeVec = this->getEdges();
+  std::vector< std::tuple<std::string, std::string, double> > edgeVec = this->getEdges();
   for (auto edge : edgeVec) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
-    int weight = std::get<2>(edge);
+    double weight = std::get<2>(edge);
 
     graph.addEdge(nodeB, nodeA, weight);
   }
@@ -232,7 +232,7 @@ Graph Graph::transpose() const {
 std::vector<std::string> Graph::neighborNames(std::string sourceNode) {
   std::vector<std::string> returnVec;
 
-  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
+  std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
   for (auto it : *neighborMapPtr) {
     returnVec.push_back(it.first);
   }
@@ -241,12 +241,12 @@ std::vector<std::string> Graph::neighborNames(std::string sourceNode) {
 }
 
 ///neighborDistMin: Returns a list of the names of neighbors along with the lowest edge weight to each neighbor
-std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string sourceNode) {
-  std::vector<std::pair<std::string, int>> returnVec;
+std::vector<std::pair<std::string, double>> Graph::neighborDistMin(std::string sourceNode) {
+  std::vector<std::pair<std::string, double>> returnVec;
 
-  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
+  std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
   for (auto it : *neighborMapPtr) {
-    std::pair<std::string, int> tempPair(it.first, *std::min_element(it.second.begin(),it.second.end()));
+    std::pair<std::string, double> tempPair(it.first, *std::min_element(it.second.begin(),it.second.end()));
     returnVec.push_back(tempPair);
   }
 
@@ -254,12 +254,12 @@ std::vector<std::pair<std::string, int>> Graph::neighborDistMin(std::string sour
 }
 
 ///neighborDistMax: Returns a list of the names of neighbors along with the highest edge weight to each neighbor
-std::vector<std::pair<std::string, int>> Graph::neighborDistMax(std::string sourceNode) {
-  std::vector<std::pair<std::string, int>> returnVec;
+std::vector<std::pair<std::string, double>> Graph::neighborDistMax(std::string sourceNode) {
+  std::vector<std::pair<std::string, double>> returnVec;
 
-  std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
+  std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr = nodeMap[sourceNode]->getMapPtr();
   for (auto it : *neighborMapPtr) {
-    std::pair<std::string, int> tempPair(it.first, *std::max_element(it.second.begin(),it.second.end()));
+    std::pair<std::string, double> tempPair(it.first, *std::max_element(it.second.begin(),it.second.end()));
     returnVec.push_back(tempPair);
   }
 
@@ -305,10 +305,10 @@ std::vector<std::string> Graph::reachableNames(std::string sourceNode) {
 }
 
 ///reachableDists: Returns a list of Nodes and their distances from a given sourceNode (uses BFS)
-std::vector<std::pair<std::string, int>> Graph::reachableDists(std::string sourceNode) {
-  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from sourceNode
-  std::vector<std::pair<std::string, int>> returnVec;
+std::vector<std::pair<std::string, double>> Graph::reachableDists(std::string sourceNode) {
+  double infinity = std::numeric_limits<double>::max(); //Simulated infinity
+  std::unordered_map<std::string, double> dist; //Holds the shortest distance to each Node from sourceNode
+  std::vector<std::pair<std::string, double>> returnVec;
 
   //If sourceNode does not exist, return an empty vector
   if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnVec; }
@@ -440,8 +440,8 @@ void Graph::DFShelper(std::string currentNode, std::string targetNode, std::unor
 
 ///Dijktras: Returns the shorted weighted path from sourceNode to targetNode
 std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string targetNode) {
-  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
+  double infinity = std::numeric_limits<double>::max(); //Simulated infinity
+  std::unordered_map<std::string, double> dist; //Holds the shortest distance to each Node from targetNode
   std::unordered_map<std::string, std::string> prevMap; //Holds the previous node of current node from the source
   std::vector<std::string> pathVec;
 
@@ -456,9 +456,9 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
 
   //Min-Heap of Pairs, where .first is the shortest distance from source and .second is the name
   //C++ will use the first value of pair as the comparison
-  std::priority_queue<std::pair<int, std::string>,
-  std::vector<std::pair<int, std::string>>,
-  std::greater<std::pair<int, std::string>> > minHeap;
+  std::priority_queue<std::pair<double, std::string>,
+  std::vector<std::pair<double, std::string>>,
+  std::greater<std::pair<double, std::string>> > minHeap;
 
   for (auto iter : nodeMap) {
     minHeap.push(std::make_pair(dist[iter.first], iter.first));
@@ -472,8 +472,8 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
     //for all neighbors N of currNode
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
     for (std::string N : neighborsCurr) {
-      std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
-      int distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
+      std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
+      double distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
       if (dist[N] > distanceToN) {
         dist[N] = distanceToN;
         prevMap[N] = currNode;
@@ -497,11 +497,11 @@ std::vector<std::string> Graph::Dijktras(std::string sourceNode, std::string tar
 }
 
 ///Djiktras: Returns an unordered_map where keys are Node names and values are the shortest weighted distance to that Node from sourceNode
-std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
-  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::unordered_map<std::string, int> dist; //Holds the shortest distance to each Node from targetNode
+std::unordered_map<std::string, double> Graph::Dijktras(std::string sourceNode) {
+  double infinity = std::numeric_limits<double>::max(); //Simulated infinity
+  std::unordered_map<std::string, double> dist; //Holds the shortest distance to each Node from targetNode
   std::unordered_map<std::string, std::string> prev; //Holds the previous node of current node from the source
-  std::unordered_map<std::string, int> returnMap; //Holds the distance to all nodes reachable from sourceNode
+  std::unordered_map<std::string, double> returnMap; //Holds the distance to all nodes reachable from sourceNode
 
   if (nodeMap.find(sourceNode) == nodeMap.end()) { return returnMap; }
 
@@ -514,9 +514,9 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
 
   //Min-Heap of Pairs, where .first is the shortest distance from source and .second is the name
   //C++ will use the first value of pair as the comparison
-  std::priority_queue<std::pair<int, std::string>,
-  std::vector<std::pair<int, std::string>>,
-  std::greater<std::pair<int, std::string>> > minHeap;
+  std::priority_queue<std::pair<double, std::string>,
+  std::vector<std::pair<double, std::string>>,
+  std::greater<std::pair<double, std::string>> > minHeap;
 
   for (auto iter : nodeMap) {
     minHeap.push(std::make_pair(dist[iter.first], iter.first));
@@ -530,8 +530,8 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
     //for all neighbors N of currNode
     std::vector<std::string> neighborsCurr = neighborNames(currNode);
     for (std::string N : neighborsCurr) {
-      std::unordered_map<std::string, std::multiset<int>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
-      int distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
+      std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr = nodeMap[currNode]->getMapPtr();
+      double distanceToN = dist[currNode] + *((*neighborMapPtr)[N]).begin();
       if (dist[N] > distanceToN) {
         dist[N] = distanceToN;
         prev[N] = currNode;
@@ -548,13 +548,13 @@ std::unordered_map<std::string, int> Graph::Dijktras(std::string sourceNode) {
 
 
 ///BellmanFord: Returns a map where keys are Node names and values are the shortest distance from sourceNode
-std::tuple<std::unordered_map<std::string, int>, std::unordered_map<std::string, std::string>, bool> Graph::BellmanFord(std::string sourceNode) {
-  int infinity = std::numeric_limits<int>::max(); //Simulated infinity
-  std::vector< std::tuple<std::string, std::string, int> > Edges = getEdges();
+std::tuple<std::unordered_map<std::string, double>, std::unordered_map<std::string, std::string>, bool> Graph::BellmanFord(std::string sourceNode) {
+  double infinity = std::numeric_limits<double>::max(); //Simulated infinity
+  std::vector< std::tuple<std::string, std::string, double> > Edges = getEdges();
   bool negativeCycle = false;
 
   //Initialize Dist & Prev maps
-  std::unordered_map<std::string, int> Dist; //Holds the shortest distance to each Node from sourceNode
+  std::unordered_map<std::string, double> Dist; //Holds the shortest distance to each Node from sourceNode
   std::unordered_map<std::string, std::string> Prev; //Holds the previous Node
   for (auto iter : nodeMap) {
     Dist.emplace(iter.first, infinity);
@@ -567,7 +567,7 @@ std::tuple<std::unordered_map<std::string, int>, std::unordered_map<std::string,
     for (auto edge : Edges) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
-      int weight = std::get<2>(edge);
+      double weight = std::get<2>(edge);
       if (Dist[nodeA] == infinity) { continue; } //infinity + weight will overflow so this guards against that
       if (Dist[nodeA] + weight < Dist[nodeB]) {
         Dist[nodeB] = Dist[nodeA] + weight;
@@ -580,7 +580,7 @@ std::tuple<std::unordered_map<std::string, int>, std::unordered_map<std::string,
   for (auto edge : Edges) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
-    int weight = std::get<2>(edge);
+    double weight = std::get<2>(edge);
     if (Dist[nodeA] == infinity) { continue; } //infinity + weight will overflow so this guards against that
     if (Dist[nodeA] + weight < Dist[nodeB]) {
       //Negative Cycle Detected:
@@ -593,7 +593,7 @@ std::tuple<std::unordered_map<std::string, int>, std::unordered_map<std::string,
   return std::make_tuple(Dist, Prev, negativeCycle);
 }
 
-std::unordered_map<std::string, int> Graph::BellmanFordDist(std::string sourceNode) {
+std::unordered_map<std::string, double> Graph::BellmanFordDist(std::string sourceNode) {
   return std::get<0>(BellmanFord(sourceNode));
 }
 std::unordered_map<std::string, std::string> Graph::BellmanFordPrev(std::string sourceNode) {
@@ -620,7 +620,7 @@ Graph Graph::Prims() {
   MST.addNode(arbitraryNode);
 
   //Repeatedly add the lightest edge until all Nodes are in the tree.
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesAscending();
+  std::vector< std::tuple<std::string, std::string, double> > edges = getEdgesAscending();
 
   while (MST.numEdges() != (numNodes()-1)) { //There are |N-1| Edges in a MST
     for (auto edge : edges) {
@@ -652,7 +652,7 @@ Graph Graph::Kruskals() {
   }
 
   //create a set S containing all the edges in the graph
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdgesDescending();
+  std::vector< std::tuple<std::string, std::string, double> > edges = getEdgesDescending();
 
   //while S is nonempty and F is not yet spanning
   while (!edges.empty() && MST.numEdges() != (numNodes()-1)) {
@@ -693,8 +693,8 @@ std::string Graph::getInfo() {
 }
 
 ///getEdges: Returns an unsorted vector of edges, where edges are represented with 3-tuples (nodeA, nodeB, weight)
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const {
-  std::vector< std::tuple<std::string, std::string, int> > edgeVec;
+std::vector< std::tuple<std::string, std::string, double> > Graph::getEdges() const {
+  std::vector< std::tuple<std::string, std::string, double> > edgeVec;
 
   //For all Nodes K in nodeMap
   for (auto iter : nodeMap) {
@@ -703,10 +703,10 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const
     for (auto iter1 : *(K->getMapPtr())) {
       auto tempSet = iter1.second; //tempSet is an multiset
       //For all weights from K to N, add it to the edgeVec
-      for (int i : tempSet) {
+      for (double i : tempSet) {
         std::string nodeA = iter.first;
         std::string nodeB = iter1.first;
-        std::tuple<std::string, std::string, int> tempTuple(nodeA, nodeB, i);
+        std::tuple<std::string, std::string, double> tempTuple(nodeA, nodeB, i);
         edgeVec.push_back(tempTuple);
 
       }
@@ -716,12 +716,12 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const
   //If the Graph is Undirected, post-process to delete duplicates ie (nodeA,nodeB,w) and (nodeB, nodeA,w)
   if (!directed) {
     //For every (A,B,w) in edgeVec, delete one (B,A,w)
-    std::vector< std::tuple<std::string, std::string, int> > deleteTheseEdges;
+    std::vector< std::tuple<std::string, std::string, double> > deleteTheseEdges;
     for (auto edge : edgeVec) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
-      int weight = std::get<2>(edge);
-      std::tuple<std::string, std::string, int> deleteMe(nodeB, nodeA, weight);
+      double weight = std::get<2>(edge);
+      std::tuple<std::string, std::string, double> deleteMe(nodeB, nodeA, weight);
       if (nodeA > nodeB) //Prevents deleting both duplicates, we just want to delete one to leave a unique edge.
         deleteTheseEdges.push_back(deleteMe);
     }
@@ -736,22 +736,22 @@ std::vector< std::tuple<std::string, std::string, int> > Graph::getEdges() const
 }
 
 ///getEdgesAscending: Returns a sorted list of edges from low to high weights
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesAscending() const {
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+std::vector< std::tuple<std::string, std::string, double> > Graph::getEdgesAscending() const {
+  std::vector< std::tuple<std::string, std::string, double> > edges = getEdges();
 
   std::sort(edges.begin(),edges.end(),
-       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
+       [](const std::tuple<std::string, std::string, double> & a, const std::tuple<std::string, std::string, double> & b) -> bool
        { return std::get<2>(a) < std::get<2>(b); });
 
   return edges;
 }
 
 ///getEdgesDescending: Returns a sorted list of edges from high to low weights
-std::vector< std::tuple<std::string, std::string, int> > Graph::getEdgesDescending() const {
-  std::vector< std::tuple<std::string, std::string, int> > edges = getEdges();
+std::vector< std::tuple<std::string, std::string, double> > Graph::getEdgesDescending() const {
+  std::vector< std::tuple<std::string, std::string, double> > edges = getEdges();
 
   std::sort(edges.begin(),edges.end(),
-       [](const std::tuple<std::string, std::string, int> & a, const std::tuple<std::string, std::string, int> & b) -> bool
+       [](const std::tuple<std::string, std::string, double> & a, const std::tuple<std::string, std::string, double> & b) -> bool
        { return std::get<2>(a) > std::get<2>(b); });
 
   return edges;
