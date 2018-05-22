@@ -1,9 +1,8 @@
 ## Synopsis
 
-This C++ Graph Library consists of a .h and .cpp files, most-importantly: Graph.h and Graph.cpp. Including these files will allow the user to instantiate 'Graph' objects which can be used for whatever Graph-related problem they
-These Graph objects also have a persistent feature: they can be written to disk as .txt files for later retrieval through a read-from-file Graph constructor. 
+This C++ Graph Library consists of a *.h and *.cpp files, most-importantly: Graph.h and Graph.cpp. Including these files will allow the user to instantiate 'Graph' objects to model graph-related problems. Graphs are persistent (ie they can be written to disk as *.txt files for later retrieval through a read-from-file Graph constructor). 
 
-No external libraries (such as Boost) were used in this project, except for the C++ Standard Template Library.
+No external libraries (eg Boost) were used in this project, except for the C++ Standard Template Library.
 ## Code Example
 
 	#include Graph.h
