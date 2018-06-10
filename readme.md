@@ -18,7 +18,7 @@ No external libraries (eg Boost) were used in this project, except for the C++ S
       G.addEdge("A","B");
       ...
       vector<string> shortestPath = G.BFS("A","Z");
-      Graph MST = G.Prims();                //Creates new Graph object from G
+      Graph MST = G.Prims(); //Creates new Graph object from G
       MST.saveGraph("MinimumSpanningTree"); //Write MST to disk
 
       //Retrieve Graph object from .txt file
