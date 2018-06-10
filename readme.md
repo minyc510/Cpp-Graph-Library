@@ -6,24 +6,24 @@ No external libraries (eg Boost) were used in this project, except for the C++ S
 
 ## Use Example
 ```c++
-	#include Graph.h
-	using namespace std;
-    
- 	int main()
- 	{
-      //Declare a Graph object, populate it.	
-      Graph G;
-      G.addNode("A"); 
-      G.addNode("B");
-      G.addEdge("A","B");
-      ...
-      vector<string> shortestPath = G.BFS("A","Z");
-      Graph MST = G.Prims(); //Creates new Graph object from G
-      MST.saveGraph("MinimumSpanningTree"); //Write MST to disk
+#include Graph.h
+using namespace std;
 
-      //Retrieve Graph object from .txt file
-      Graph F(string("NetworkConnections.txt"));
-  	}
+int main()
+{
+    //Declare a Graph object, populate it.	
+    Graph G;
+    G.addNode("A"); 
+    G.addNode("B");
+    G.addEdge("A","B");
+    ...
+    vector<string> shortestPath = G.BFS("A","Z");
+    Graph MST = G.Prims(); //Creates new Graph object from G
+    MST.saveGraph("MinimumSpanningTree"); //Write MST to disk
+
+    //Retrieve Graph object from .txt file
+    Graph F(string("NetworkConnections.txt"));
+}
 ```
 
 
