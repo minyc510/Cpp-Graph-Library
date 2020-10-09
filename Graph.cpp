@@ -12,12 +12,12 @@
 
 Graph::Graph() {}
 
-Graph::Graph(bool directed) { this->directed = directed; }
+Graph::Graph(bool directed) : directed_(directed) { }
 
 /// Copy Constructor
 Graph::Graph(const Graph& original) {
   // Copy over boolean's
-  directed = original.directed;
+  directed_ = original.directed_;
 
   // Add all nodes in original to new Graph
   for (const auto& iter : original.nodeMap_) {
@@ -59,12 +59,12 @@ Graph::Graph(const std::string& inputFileName) {
   if (line ==
       specialChar +
           std::string("PERSISTANT GRAPH: DIRECTED (Do not edit this line)")) {
-    directed = true;
+    directed_ = true;
   } else if (line ==
              specialChar +
                  std::string(
                      "PERSISTANT GRAPH: UNDIRECTED (Do not edit this line)")) {
-    directed = false;
+    directed_ = false;
   } else {
     return;
   }  // Corrupt File
@@ -162,7 +162,7 @@ bool Graph::addEdge(const std::string& fromNode, const std::string& toNode,
   nodeMap_[toNode]->getSetRef().insert(fromNode);
 
   // If the Graph is undirected, also add the "Inverse-Edge"
-  if (!directed) {
+  if (!directed_) {
     nodeMap_[toNode]->addNeighbor(fromNode, weight);
     nodeMap_[fromNode]->getSetRef().insert(toNode);
   }
@@ -190,12 +190,12 @@ bool Graph::deleteNode(const std::string& targetNode) {
   // getSetRef() will have all Nodes that have an edge to targetNode
   std::unordered_set<std::string>& setReference =
       (nodeMap_[targetNode]->getSetRef());
-  for (auto iter : setReference) {
+  for (const auto& iter : setReference) {
     (nodeMap_[iter]->getMapPtr())->erase(targetNode);
   }
 
   // Remove targetNode from it's neighbors "getSetRef()"
-  for (auto iter : *(nodeMap_[targetNode]->getMapPtr())) {
+  for (const auto& iter : *(nodeMap_[targetNode]->getMapPtr())) {
     nodeMap_[iter.first]->getSetRef().erase(targetNode);
   }
 
@@ -231,7 +231,7 @@ bool Graph::deleteEdge(const std::string& fromNode, const std::string& toNode,
   }
 
   // If the Graph is undirected, also delete the "Inverse-Edge"
-  if (!directed) {
+  if (!directed_) {
     std::unordered_map<std::string, std::multiset<double>>& neighborMapRef1 =
         *(nodeMap_[toNode]->getMapPtr());
 
@@ -260,7 +260,7 @@ bool Graph::connected() const {
   }  // An empty Graph is trivially connected
 
   // Run explore on a random Node
-  auto it = nodeMap_.begin();
+  const auto& it = nodeMap_.begin();
   std::unordered_set<std::string> tempSet = explore(it->first);
   // Is the set of Nodes reachable == # of all Nodes in the Graph?
   return (tempSet.size() == nodeMap_.size());
@@ -281,7 +281,7 @@ bool Graph::weaklyConnected() const {
   // add <B,A,w>)
   std::vector<std::tuple<std::string, std::string, double>> edgeVec =
       modifiedCopy.getEdges();
-  for (auto edge : edgeVec) {
+  for (const auto& edge : edgeVec) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
     double weight = std::get<2>(edge);
@@ -315,10 +315,10 @@ bool Graph::stronglyConnected() const {
 /// transpose: Returns a Graph object with reversed edges of the original Graph.
 Graph Graph::transpose() const {
   // Create a new Graph object.
-  Graph graph(directed);
+  Graph graph(directed_);
 
   // Add all existing nodes to the new Graph
-  for (auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     double data = iter.second->getData();
     graph.addNode(data, iter.first);
   }
@@ -326,7 +326,7 @@ Graph Graph::transpose() const {
   // For all edges A,B,w in the original, add B,A,w to the copy
   std::vector<std::tuple<std::string, std::string, double>> edgeVec =
       this->getEdges();
-  for (auto edge : edgeVec) {
+  for (const auto& edge : edgeVec) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
     double weight = std::get<2>(edge);
@@ -342,13 +342,13 @@ std::vector<std::string> Graph::neighborNames(
     const std::string& sourceNode) const {
   std::vector<std::string> returnVec;
 
-  auto it = nodeMap_.find(sourceNode);
+  const auto& it = nodeMap_.find(sourceNode);
   if (it == nodeMap_.end()) {
     return returnVec;
   }
   std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr =
       (it->second)->getMapPtr();
-  for (auto it : *neighborMapPtr) {
+  for (const auto& it : *neighborMapPtr) {
     returnVec.push_back(it.first);
   }
 
@@ -360,14 +360,14 @@ std::vector<std::string> Graph::neighborNames(
 std::vector<std::pair<std::string, double>> Graph::neighborDistMin(
     const std::string& sourceNode) const {
   std::vector<std::pair<std::string, double>> returnVec;
-  auto it = nodeMap_.find(sourceNode);
+  const auto& it = nodeMap_.find(sourceNode);
   if (it == nodeMap_.end()) {
     return returnVec;
   }
 
   std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr =
       (it->second)->getMapPtr();
-  for (auto it : *neighborMapPtr) {
+  for (const auto& it : *neighborMapPtr) {
     std::pair<std::string, double> tempPair(
         it.first, *std::min_element(it.second.begin(), it.second.end()));
     returnVec.push_back(tempPair);
@@ -381,14 +381,14 @@ std::vector<std::pair<std::string, double>> Graph::neighborDistMin(
 std::vector<std::pair<std::string, double>> Graph::neighborDistMax(
     const std::string& sourceNode) const {
   std::vector<std::pair<std::string, double>> returnVec;
-  auto it = nodeMap_.find(sourceNode);
+  const auto& it = nodeMap_.find(sourceNode);
   if (it == nodeMap_.end()) {
     return returnVec;
   }
 
   std::unordered_map<std::string, std::multiset<double>>* neighborMapPtr =
       (it->second)->getMapPtr();
-  for (auto it : *neighborMapPtr) {
+  for (const auto& it : *neighborMapPtr) {
     std::pair<std::string, double> tempPair(
         it.first, *std::max_element(it.second.begin(), it.second.end()));
     returnVec.push_back(tempPair);
@@ -405,7 +405,7 @@ bool Graph::deleteNeighbors(const std::string& sourceNode) {
   }
 
   std::vector<std::string> neighbors = neighborNames(sourceNode);
-  for (auto neighbor : neighbors) {
+  for (const auto& neighbor : neighbors) {
     deleteNode(neighbor);
   }
   return true;
@@ -425,7 +425,7 @@ void Graph::exploreHelper(std::unordered_set<std::string>& visited,
   visited.insert(v);
   std::vector<std::string> neighbors = neighborNames(v);
 
-  for (auto neighbor : neighbors) {
+  for (const auto& neighbor : neighbors) {
     if (visited.find(neighbor) == visited.end())
       exploreHelper(visited, neighbor);
   }
@@ -694,7 +694,7 @@ std::unordered_map<std::string, double> Graph::Dijktras(
 
   // For all Nodes N, set their distance from source to infinity, all prevs are
   // null
-  for (const auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     dist[iter.first] = infinity;
     prev[iter.first] = "";  // Empty string serves as null
   }
@@ -707,7 +707,7 @@ std::unordered_map<std::string, double> Graph::Dijktras(
                       std::greater<std::pair<double, std::string>>>
       minHeap;
 
-  for (auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     minHeap.push(std::make_pair(dist[iter.first], iter.first));
   }
 
@@ -729,7 +729,7 @@ std::unordered_map<std::string, double> Graph::Dijktras(
     }
   }
 
-  for (auto iter : dist) {
+  for (const auto& iter : dist) {
     if (iter.second != infinity) returnMap.emplace(iter.first, iter.second);
   }
   return returnMap;
@@ -748,7 +748,7 @@ Graph::BellmanFord(const std::string& sourceNode) const {
   std::unordered_map<std::string, double>
       Dist;  // Holds the shortest distance to each Node from sourceNode
   std::unordered_map<std::string, std::string> Prev;  // Holds the previous Node
-  for (auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     Dist.emplace(iter.first, infinity);
     Prev.emplace(iter.first, "");
   }
@@ -756,7 +756,7 @@ Graph::BellmanFord(const std::string& sourceNode) const {
 
   // Repeatedly "Relax" Edges
   for (int i = 1; i <= numNodes() - 1; i++) {
-    for (auto edge : Edges) {
+    for (const auto& edge : Edges) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
       double weight = std::get<2>(edge);
@@ -771,7 +771,7 @@ Graph::BellmanFord(const std::string& sourceNode) const {
   }
 
   // Check for Negative Cycles
-  for (auto edge : Edges) {
+  for (const auto& edge : Edges) {
     std::string nodeA = std::get<0>(edge);
     std::string nodeB = std::get<1>(edge);
     double weight = std::get<2>(edge);
@@ -800,7 +800,7 @@ std::unordered_map<std::string, std::string> Graph::BellmanFordPrev(
 bool Graph::NegativeCycle() const {
   // Warning! Very inefficient, runs BellmanFord using every Node as a source
   // until a negCycle is detected or none at all.
-  for (auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     if (std::get<2>(BellmanFord(iter.first))) {
       return true;
     }
@@ -824,7 +824,7 @@ Graph Graph::Prims() {
 
   while (MST.numEdges() != (numNodes() - 1)) {  // There are |N-1| Edges in a
                                                 // MST
-    for (auto edge : edges) {
+    for (const auto& edge : edges) {
       // If one Node is in the tree and the other is not
       if ((MST.nodeExists(std::get<0>(edge)) &&
            !MST.nodeExists(std::get<1>(edge))) ||
@@ -850,7 +850,7 @@ Graph Graph::Kruskals() {
   }  // If the Graph is not connected, return an empty tree.
 
   // Add all nodes in original to new Graph
-  for (auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     double data = iter.second->getData();
     std::string name = iter.first;
     MST.addNode(data, name);
@@ -884,13 +884,13 @@ std::string Graph::getInfo() {
   ss << std::fixed;  // Prevents scientific-notation
   ss << "\n\nGraph Info: " << std::endl;
   // For Every Node
-  for (auto iterA : nodeMap_) {
+  for (const auto& iterA : nodeMap_) {
     ss << "[" << iterA.first << ": " << iterA.second->getData() << "] ";
     // For Every Neighbor of Node
-    for (auto iterB : *(iterA.second->getMapPtr())) {
+    for (const auto& iterB : *(iterA.second->getMapPtr())) {
       ss << "(" << iterB.first << "): ";
       // Print Each Edge of Neighbor
-      for (auto weight : iterB.second) {
+      for (const auto weight : iterB.second) {
         ss << weight << ", ";
       }
     }
@@ -906,11 +906,11 @@ std::vector<std::tuple<std::string, std::string, double>> Graph::getEdges()
   std::vector<std::tuple<std::string, std::string, double>> edgeVec;
 
   // For all Nodes K in nodeMap_
-  for (auto iter : nodeMap_) {
-    auto K = iter.second;  // K is a Node*
+  for (const auto& iter : nodeMap_) {
+    const auto& K = iter.second;  // K is a Node*
     // For all neighbors N of K
-    for (auto iter1 : *(K->getMapPtr())) {
-      auto tempSet = iter1.second;  // tempSet is an multiset
+    for (const auto& iter1 : *(K->getMapPtr())) {
+      const auto& tempSet = iter1.second;  // tempSet is an multiset
       // For all weights from K to N, add it to the edgeVec
       for (double i : tempSet) {
         std::string nodeA = iter.first;
@@ -923,10 +923,10 @@ std::vector<std::tuple<std::string, std::string, double>> Graph::getEdges()
 
   // If the Graph is Undirected, post-process to delete duplicates ie
   // (nodeA,nodeB,w) and (nodeB, nodeA,w)
-  if (!directed) {
+  if (!directed_) {
     // For every (A,B,w) in edgeVec, delete one (B,A,w)
     std::vector<std::tuple<std::string, std::string, double>> deleteTheseEdges;
-    for (auto edge : edgeVec) {
+    for (const auto& edge : edgeVec) {
       std::string nodeA = std::get<0>(edge);
       std::string nodeB = std::get<1>(edge);
       double weight = std::get<2>(edge);
@@ -937,7 +937,7 @@ std::vector<std::tuple<std::string, std::string, double>> Graph::getEdges()
         deleteTheseEdges.push_back(deleteMe);
     }
 
-    for (auto edge : deleteTheseEdges) {
+    for (const auto& edge : deleteTheseEdges) {
       edgeVec.erase(std::remove(edgeVec.begin(), edgeVec.end(), edge),
                     edgeVec.end());
     }
@@ -991,7 +991,7 @@ bool Graph::saveGraph(const std::string& outputFileName) const {
   output << std::fixed;  // Prevents scientific-notation
 
   // Write Header, includes directed bool
-  if (directed) {
+  if (directed_) {
     output << specialChar
            << "PERSISTANT GRAPH: DIRECTED (Do not edit this line)" << std::endl;
   } else {
@@ -1004,14 +1004,14 @@ bool Graph::saveGraph(const std::string& outputFileName) const {
 
   // Write Nodes
   output << specialChar << "NODES (Do not edit this line):" << std::endl;
-  for (const auto iter : nodeMap_) {
+  for (const auto& iter : nodeMap_) {
     output << iter.first << separator << nodeMap_.at(iter.first)->getData()
            << std::endl;
   }
 
   // Write Edges
   output << specialChar << "EDGES (Do not edit this line):" << std::endl;
-  for (auto tuple : getEdges()) {
+  for (const auto& tuple : getEdges()) {
     output << std::get<0>(tuple) << separator << std::get<1>(tuple) << separator
            << std::get<2>(tuple) << std::endl;
   }

@@ -14,7 +14,7 @@
 class Graph {
  private:
   std::unordered_map<std::string, Node*> nodeMap_;
-  bool directed = true;
+  bool directed_ = true;
 
  public:
   // Constructors & Destructor
