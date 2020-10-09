@@ -1,34 +1,33 @@
-//Min Chang
-//Github: Minyc510
+// Min Chang
+// Github: Minyc510
 
 #ifndef NODE_H
 #define NODE_H
 
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <set>
 
 class Node {
+ private:
+  double data_;
+  std::string name_;
 
-private:
-  double data;
-  std::string name;
+  // neighborMap: List of Nodes that this node has an edge to
+  std::unordered_map<std::string, std::multiset<double>>* neighborMap_;
+  // neighborSet: List of Nodes that have an edge to this Node
+  std::unordered_set<std::string> neighborOfSet_;
 
-  //neighborMap: List of Nodes that this node has an edge to
-  std::unordered_map<std::string, std::multiset<double>>* neighborMap;
-  //neighborSet: List of Nodes that have an edge to this Node
-  std::unordered_set<std::string> neighborOfSet;
-
-public:
-  Node(double data, std::string name);
+ public:
+  Node(double data, const std::string& name);
   ~Node();
 
-  void addNeighbor(std::string neighborName, double weight);
+  void addNeighbor(const std::string& neighborName, double weight);
 
-  //Access
-  double getData();
-  std::unordered_map<std::string, std::multiset<double>>* getMapPtr();
+  // Access
+  double getData() const;
+  std::unordered_map<std::string, std::multiset<double>>* getMapPtr() const;
   std::unordered_set<std::string>& getSetRef();
 };
-#endif // NODE_H
+#endif  // NODE_H

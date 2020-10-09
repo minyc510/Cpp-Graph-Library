@@ -30,6 +30,9 @@ int main()
 
 ## Installation
 
-Simply download the .h and .cpp files, place them in your working directory, and "#include" them in your appropiate files.
+Simply download the .h and .cpp files, place them in your working directory, and "#include" them in your appropiate files. 
 
-
+## Use Example
+```
+$ g++ --std=c++11 main.cpp Node.cpp Graph.cpp -o main
+```
