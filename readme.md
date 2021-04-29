@@ -6,7 +6,7 @@ No external libraries (eg Boost) were used in this project, except for the C++ S
 
 ## Use Example
 ```c++
-#include Graph.h
+#include "Graph.h"
 using namespace std;
 
 int main()
@@ -24,15 +24,36 @@ int main()
     //Retrieve Graph object from .txt file
     Graph F(string("NetworkConnections.txt"));
 }
+
+$ g++ --std=c++11 main.cpp Node.cpp Graph.cpp -o main
 ```
 
 
 
 ## Installation
+Simply download the .h and .cpp files, place them in your working directory, and "#include" them in your appropiate files.
 
-Simply download the .h and .cpp files, place them in your working directory, and "#include" them in your appropiate files. 
 
-## Use Example
+## MIT License
+
+Copyright (c) 2021 minyc510
+
 ```
-$ g++ --std=c++11 main.cpp Node.cpp Graph.cpp -o main
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```

@@ -19,18 +19,29 @@ int main() {
   G.addNode(420, "C");
   G.addNode(-12423, "D");
   G.addNode("Isolated");
+  G.addNode("X");
+  G.addNode("X");
+  G.addNode("Y");
 
   G.addEdge("A", "B", 1);
   G.addEdge("A", "C", 3);
   G.addEdge("B", "C", -714234.322323);
   G.addEdge("C", "D", 313412341234123);
   G.addEdge("D", "A", -3);
+  G.addEdge("X", "Y");
+
 
   G.saveGraph("Yee");
   Graph F(string("Yee.txt"));
 
+  Graph H = G.transpose();
+  H.saveGraph("Foo");
+
+  Graph Foo(string("Foo.txt"));
+
   cout << G.getInfo();
   cout << F.getInfo();
+  cout << Foo.getInfo();
 
   cout << "\n------------------------------------" << endl;
   cout << "Done." << endl;
